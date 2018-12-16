@@ -37312,6 +37312,7 @@ module.exports = function(app) {
             '<select class="form-control" id="storage" name="storage" ng-options="store.name as store.title | formioTranslate for store in storage" ng-model="component.storage"></select>' +
           '</div>' +
           '<form-builder-option property="url" ng-show="component.storage === \'url\'"></form-builder-option>' +
+          '<form-builder-option property="privateDownload" ng-show="component.storage === \'url\'"></form-builder-option>' +
           '<form-builder-option property="dir"></form-builder-option>' +
           '<form-builder-option property="image"></form-builder-option>' +
           '<form-builder-option property="imageSize" ng-if="component.image"></form-builder-option>' +
@@ -41888,7 +41889,7 @@ module.exports = ['$timeout','$q', function($timeout, $q) {
 
 },{}],412:[function(_dereq_,module,exports){
 "use strict";
-/*! ng-formio-builder v2.36.9 | https://unpkg.com/ng-formio-builder@2.36.9/LICENSE.txt */
+/*! ng-formio-builder v2.36.11 | https://unpkg.com/ng-formio-builder@2.36.11/LICENSE.txt */
 /*global window: false, console: false, jQuery: false */
 /*jshint browser: true */
 

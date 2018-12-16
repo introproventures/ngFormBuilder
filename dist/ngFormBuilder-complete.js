@@ -106303,6 +106303,7 @@ module.exports = function(app) {
             '<select class="form-control" id="storage" name="storage" ng-options="store.name as store.title | formioTranslate for store in storage" ng-model="component.storage"></select>' +
           '</div>' +
           '<form-builder-option property="url" ng-show="component.storage === \'url\'"></form-builder-option>' +
+          '<form-builder-option property="privateDownload" ng-show="component.storage === \'url\'"></form-builder-option>' +
           '<form-builder-option property="dir"></form-builder-option>' +
           '<form-builder-option property="image"></form-builder-option>' +
           '<form-builder-option property="imageSize" ng-if="component.image"></form-builder-option>' +
@@ -110886,7 +110887,7 @@ _dereq_('./ngFormBuilder.js');
 
 },{"./ngFormBuilder.js":537,"angular-drag-and-drop-lists":2,"ng-dialog":388,"ng-formio/src/formio-complete.js":456}],537:[function(_dereq_,module,exports){
 "use strict";
-/*! ng-formio-builder v2.36.9 | https://unpkg.com/ng-formio-builder@2.36.9/LICENSE.txt */
+/*! ng-formio-builder v2.36.11 | https://unpkg.com/ng-formio-builder@2.36.11/LICENSE.txt */
 /*global window: false, console: false, jQuery: false */
 /*jshint browser: true */
 
