@@ -126,6 +126,11 @@ module.exports = {
     type: 'checkbox',
     tooltip: 'Instead of a list of linked files, images will be rendered in the view.'
   },
+  privateDownload: {
+    label: 'Private Download',
+    type: 'checkbox',
+    tooltip: 'Select to enable private download using formio-upload server.'
+  },
   imageSize: {
     label: 'Image Size',
     placeholder: '100',
