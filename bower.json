@@ -1,10 +1,10 @@
 {
-  "name": "ng-formio-builder",
+  "name": "ng-formio-builder-file-fix",
   "main": [
     "dist/ngFormBuilder.js",
     "css/ngFormBuilder.css"
   ],
-  "version": "2.36.9",
+  "version": "2.36.10",
   "authors": [
     "Travis Tidwell <travis@form.io>"
   ],
