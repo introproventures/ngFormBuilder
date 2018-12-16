@@ -110892,7 +110892,7 @@ _dereq_('./ngFormBuilder.js');
 
 },{"./ngFormBuilder.js":537,"angular-drag-and-drop-lists":2,"ng-dialog":388,"ng-formio/src/formio-complete.js":456}],537:[function(_dereq_,module,exports){
 "use strict";
-/*! ng-formio-builder v2.36.12 | https://unpkg.com/ng-formio-builder@2.36.12/LICENSE.txt */
+/*! ng-formio-builder v2.36.13 | https://unpkg.com/ng-formio-builder@2.36.13/LICENSE.txt */
 /*global window: false, console: false, jQuery: false */
 /*jshint browser: true */
 
