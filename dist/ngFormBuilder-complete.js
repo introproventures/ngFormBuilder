@@ -2149,7 +2149,7 @@ return /******/ (function(modules) { // webpackBootstrap
 })();
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"angular":11,"moment":386}],5:[function(_dereq_,module,exports){
+},{"angular":11,"moment":385}],5:[function(_dereq_,module,exports){
 /**
  * @license AngularJS v1.7.5
  * (c) 2010-2018 Google, Inc. http://angularjs.org
@@ -48252,10 +48252,10 @@ _dereq_('../../js/tab.js')
 _dereq_('../../js/affix.js')
 },{"../../js/affix.js":14,"../../js/alert.js":15,"../../js/button.js":16,"../../js/carousel.js":17,"../../js/collapse.js":18,"../../js/dropdown.js":19,"../../js/modal.js":20,"../../js/popover.js":21,"../../js/scrollspy.js":22,"../../js/tab.js":23,"../../js/tooltip.js":24,"../../js/transition.js":25}],14:[function(_dereq_,module,exports){
 /* ========================================================================
- * Bootstrap: affix.js v3.3.7
- * http://getbootstrap.com/javascript/#affix
+ * Bootstrap: affix.js v3.4.0
+ * https://getbootstrap.com/docs/3.4/javascript/#affix
  * ========================================================================
- * Copyright 2011-2016 Twitter, Inc.
+ * Copyright 2011-2018 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
@@ -48269,7 +48269,9 @@ _dereq_('../../js/affix.js')
   var Affix = function (element, options) {
     this.options = $.extend({}, Affix.DEFAULTS, options)
 
-    this.$target = $(this.options.target)
+    var target = this.options.target === Affix.DEFAULTS.target ? $(this.options.target) : $(document).find(this.options.target)
+
+    this.$target = target
       .on('scroll.bs.affix.data-api', $.proxy(this.checkPosition, this))
       .on('click.bs.affix.data-api',  $.proxy(this.checkPositionWithEventLoop, this))
 
@@ -48281,7 +48283,7 @@ _dereq_('../../js/affix.js')
     this.checkPosition()
   }
 
-  Affix.VERSION  = '3.3.7'
+  Affix.VERSION  = '3.4.0'
 
   Affix.RESET    = 'affix affix-top affix-bottom'
 
@@ -48416,10 +48418,10 @@ _dereq_('../../js/affix.js')
 
 },{}],15:[function(_dereq_,module,exports){
 /* ========================================================================
- * Bootstrap: alert.js v3.3.7
- * http://getbootstrap.com/javascript/#alerts
+ * Bootstrap: alert.js v3.4.0
+ * https://getbootstrap.com/docs/3.4/javascript/#alerts
  * ========================================================================
- * Copyright 2011-2016 Twitter, Inc.
+ * Copyright 2011-2018 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
@@ -48435,7 +48437,7 @@ _dereq_('../../js/affix.js')
     $(el).on('click', dismiss, this.close)
   }
 
-  Alert.VERSION = '3.3.7'
+  Alert.VERSION = '3.4.0'
 
   Alert.TRANSITION_DURATION = 150
 
@@ -48448,7 +48450,8 @@ _dereq_('../../js/affix.js')
       selector = selector && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
     }
 
-    var $parent = $(selector === '#' ? [] : selector)
+    selector    = selector === '#' ? [] : selector
+    var $parent = $(document).find(selector)
 
     if (e) e.preventDefault()
 
@@ -48512,10 +48515,10 @@ _dereq_('../../js/affix.js')
 
 },{}],16:[function(_dereq_,module,exports){
 /* ========================================================================
- * Bootstrap: button.js v3.3.7
- * http://getbootstrap.com/javascript/#buttons
+ * Bootstrap: button.js v3.4.0
+ * https://getbootstrap.com/docs/3.4/javascript/#buttons
  * ========================================================================
- * Copyright 2011-2016 Twitter, Inc.
+ * Copyright 2011-2018 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
@@ -48532,7 +48535,7 @@ _dereq_('../../js/affix.js')
     this.isLoading = false
   }
 
-  Button.VERSION  = '3.3.7'
+  Button.VERSION  = '3.4.0'
 
   Button.DEFAULTS = {
     loadingText: 'loading...'
@@ -48639,10 +48642,10 @@ _dereq_('../../js/affix.js')
 
 },{}],17:[function(_dereq_,module,exports){
 /* ========================================================================
- * Bootstrap: carousel.js v3.3.7
- * http://getbootstrap.com/javascript/#carousel
+ * Bootstrap: carousel.js v3.4.0
+ * https://getbootstrap.com/docs/3.4/javascript/#carousel
  * ========================================================================
- * Copyright 2011-2016 Twitter, Inc.
+ * Copyright 2011-2018 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
@@ -48670,7 +48673,7 @@ _dereq_('../../js/affix.js')
       .on('mouseleave.bs.carousel', $.proxy(this.cycle, this))
   }
 
-  Carousel.VERSION  = '3.3.7'
+  Carousel.VERSION  = '3.4.0'
 
   Carousel.TRANSITION_DURATION = 600
 
@@ -48784,7 +48787,9 @@ _dereq_('../../js/affix.js')
     var slidEvent = $.Event('slid.bs.carousel', { relatedTarget: relatedTarget, direction: direction }) // yes, "slid"
     if ($.support.transition && this.$element.hasClass('slide')) {
       $next.addClass(type)
-      $next[0].offsetWidth // force reflow
+      if (typeof $next === 'object' && $next.length) {
+        $next[0].offsetWidth // force reflow
+      }
       $active.addClass(direction)
       $next.addClass(direction)
       $active
@@ -48846,10 +48851,17 @@ _dereq_('../../js/affix.js')
   // =================
 
   var clickHandler = function (e) {
-    var href
     var $this   = $(this)
-    var $target = $($this.attr('data-target') || (href = $this.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '')) // strip for ie7
+    var href    = $this.attr('href')
+    if (href) {
+      href = href.replace(/.*(?=#[^\s]+$)/, '') // strip for ie7
+    }
+
+    var target  = $this.attr('data-target') || href
+    var $target = $(document).find(target)
+
     if (!$target.hasClass('carousel')) return
+
     var options = $.extend({}, $target.data(), $this.data())
     var slideIndex = $this.attr('data-slide-to')
     if (slideIndex) options.interval = false
@@ -48878,10 +48890,10 @@ _dereq_('../../js/affix.js')
 
 },{}],18:[function(_dereq_,module,exports){
 /* ========================================================================
- * Bootstrap: collapse.js v3.3.7
- * http://getbootstrap.com/javascript/#collapse
+ * Bootstrap: collapse.js v3.4.0
+ * https://getbootstrap.com/docs/3.4/javascript/#collapse
  * ========================================================================
- * Copyright 2011-2016 Twitter, Inc.
+ * Copyright 2011-2018 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
@@ -48909,7 +48921,7 @@ _dereq_('../../js/affix.js')
     if (this.options.toggle) this.toggle()
   }
 
-  Collapse.VERSION  = '3.3.7'
+  Collapse.VERSION  = '3.4.0'
 
   Collapse.TRANSITION_DURATION = 350
 
@@ -49016,7 +49028,7 @@ _dereq_('../../js/affix.js')
   }
 
   Collapse.prototype.getParent = function () {
-    return $(this.options.parent)
+    return $(document).find(this.options.parent)
       .find('[data-toggle="collapse"][data-parent="' + this.options.parent + '"]')
       .each($.proxy(function (i, element) {
         var $element = $(element)
@@ -49039,7 +49051,7 @@ _dereq_('../../js/affix.js')
     var target = $trigger.attr('data-target')
       || (href = $trigger.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '') // strip for ie7
 
-    return $(target)
+    return $(document).find(target)
   }
 
 
@@ -49092,10 +49104,10 @@ _dereq_('../../js/affix.js')
 
 },{}],19:[function(_dereq_,module,exports){
 /* ========================================================================
- * Bootstrap: dropdown.js v3.3.7
- * http://getbootstrap.com/javascript/#dropdowns
+ * Bootstrap: dropdown.js v3.4.0
+ * https://getbootstrap.com/docs/3.4/javascript/#dropdowns
  * ========================================================================
- * Copyright 2011-2016 Twitter, Inc.
+ * Copyright 2011-2018 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
@@ -49112,7 +49124,7 @@ _dereq_('../../js/affix.js')
     $(element).on('click.bs.dropdown', this.toggle)
   }
 
-  Dropdown.VERSION = '3.3.7'
+  Dropdown.VERSION = '3.4.0'
 
   function getParent($this) {
     var selector = $this.attr('data-target')
@@ -49122,7 +49134,7 @@ _dereq_('../../js/affix.js')
       selector = selector && /#[A-Za-z]/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
     }
 
-    var $parent = selector && $(selector)
+    var $parent = selector && $(document).find(selector)
 
     return $parent && $parent.length ? $parent : $this.parent()
   }
@@ -49259,10 +49271,10 @@ _dereq_('../../js/affix.js')
 
 },{}],20:[function(_dereq_,module,exports){
 /* ========================================================================
- * Bootstrap: modal.js v3.3.7
- * http://getbootstrap.com/javascript/#modals
+ * Bootstrap: modal.js v3.4.0
+ * https://getbootstrap.com/docs/3.4/javascript/#modals
  * ========================================================================
- * Copyright 2011-2016 Twitter, Inc.
+ * Copyright 2011-2018 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
@@ -49274,15 +49286,16 @@ _dereq_('../../js/affix.js')
   // ======================
 
   var Modal = function (element, options) {
-    this.options             = options
-    this.$body               = $(document.body)
-    this.$element            = $(element)
-    this.$dialog             = this.$element.find('.modal-dialog')
-    this.$backdrop           = null
-    this.isShown             = null
-    this.originalBodyPad     = null
-    this.scrollbarWidth      = 0
+    this.options = options
+    this.$body = $(document.body)
+    this.$element = $(element)
+    this.$dialog = this.$element.find('.modal-dialog')
+    this.$backdrop = null
+    this.isShown = null
+    this.originalBodyPad = null
+    this.scrollbarWidth = 0
     this.ignoreBackdropClick = false
+    this.fixedContent = '.navbar-fixed-top, .navbar-fixed-bottom'
 
     if (this.options.remote) {
       this.$element
@@ -49293,7 +49306,7 @@ _dereq_('../../js/affix.js')
     }
   }
 
-  Modal.VERSION  = '3.3.7'
+  Modal.VERSION = '3.4.0'
 
   Modal.TRANSITION_DURATION = 300
   Modal.BACKDROP_TRANSITION_DURATION = 150
@@ -49310,7 +49323,7 @@ _dereq_('../../js/affix.js')
 
   Modal.prototype.show = function (_relatedTarget) {
     var that = this
-    var e    = $.Event('show.bs.modal', { relatedTarget: _relatedTarget })
+    var e = $.Event('show.bs.modal', { relatedTarget: _relatedTarget })
 
     this.$element.trigger(e)
 
@@ -49401,8 +49414,8 @@ _dereq_('../../js/affix.js')
       .off('focusin.bs.modal') // guard against infinite focus loop
       .on('focusin.bs.modal', $.proxy(function (e) {
         if (document !== e.target &&
-            this.$element[0] !== e.target &&
-            !this.$element.has(e.target).length) {
+          this.$element[0] !== e.target &&
+          !this.$element.has(e.target).length) {
           this.$element.trigger('focus')
         }
       }, this))
@@ -49504,7 +49517,7 @@ _dereq_('../../js/affix.js')
     var modalIsOverflowing = this.$element[0].scrollHeight > document.documentElement.clientHeight
 
     this.$element.css({
-      paddingLeft:  !this.bodyIsOverflowing && modalIsOverflowing ? this.scrollbarWidth : '',
+      paddingLeft: !this.bodyIsOverflowing && modalIsOverflowing ? this.scrollbarWidth : '',
       paddingRight: this.bodyIsOverflowing && !modalIsOverflowing ? this.scrollbarWidth : ''
     })
   }
@@ -49529,11 +49542,26 @@ _dereq_('../../js/affix.js')
   Modal.prototype.setScrollbar = function () {
     var bodyPad = parseInt((this.$body.css('padding-right') || 0), 10)
     this.originalBodyPad = document.body.style.paddingRight || ''
-    if (this.bodyIsOverflowing) this.$body.css('padding-right', bodyPad + this.scrollbarWidth)
+    var scrollbarWidth = this.scrollbarWidth
+    if (this.bodyIsOverflowing) {
+      this.$body.css('padding-right', bodyPad + scrollbarWidth)
+      $(this.fixedContent).each(function (index, element) {
+        var actualPadding = element.style.paddingRight
+        var calculatedPadding = $(element).css('padding-right')
+        $(element)
+          .data('padding-right', actualPadding)
+          .css('padding-right', parseFloat(calculatedPadding) + scrollbarWidth + 'px')
+      })
+    }
   }
 
   Modal.prototype.resetScrollbar = function () {
     this.$body.css('padding-right', this.originalBodyPad)
+    $(this.fixedContent).each(function (index, element) {
+      var padding = $(element).data('padding-right')
+      $(element).removeData('padding-right')
+      element.style.paddingRight = padding ? padding : ''
+    })
   }
 
   Modal.prototype.measureScrollbar = function () { // thx walsh
@@ -49551,8 +49579,8 @@ _dereq_('../../js/affix.js')
 
   function Plugin(option, _relatedTarget) {
     return this.each(function () {
-      var $this   = $(this)
-      var data    = $this.data('bs.modal')
+      var $this = $(this)
+      var data = $this.data('bs.modal')
       var options = $.extend({}, Modal.DEFAULTS, $this.data(), typeof option == 'object' && option)
 
       if (!data) $this.data('bs.modal', (data = new Modal(this, options)))
@@ -49563,7 +49591,7 @@ _dereq_('../../js/affix.js')
 
   var old = $.fn.modal
 
-  $.fn.modal             = Plugin
+  $.fn.modal = Plugin
   $.fn.modal.Constructor = Modal
 
 
@@ -49580,10 +49608,13 @@ _dereq_('../../js/affix.js')
   // ==============
 
   $(document).on('click.bs.modal.data-api', '[data-toggle="modal"]', function (e) {
-    var $this   = $(this)
-    var href    = $this.attr('href')
-    var $target = $($this.attr('data-target') || (href && href.replace(/.*(?=#[^\s]+$)/, ''))) // strip for ie7
-    var option  = $target.data('bs.modal') ? 'toggle' : $.extend({ remote: !/#/.test(href) && href }, $target.data(), $this.data())
+    var $this = $(this)
+    var href = $this.attr('href')
+    var target = $this.attr('data-target') ||
+      (href && href.replace(/.*(?=#[^\s]+$)/, '')) // strip for ie7
+
+    var $target = $(document).find(target)
+    var option = $target.data('bs.modal') ? 'toggle' : $.extend({ remote: !/#/.test(href) && href }, $target.data(), $this.data())
 
     if ($this.is('a')) e.preventDefault()
 
@@ -49600,10 +49631,10 @@ _dereq_('../../js/affix.js')
 
 },{}],21:[function(_dereq_,module,exports){
 /* ========================================================================
- * Bootstrap: popover.js v3.3.7
- * http://getbootstrap.com/javascript/#popovers
+ * Bootstrap: popover.js v3.4.0
+ * https://getbootstrap.com/docs/3.4/javascript/#popovers
  * ========================================================================
- * Copyright 2011-2016 Twitter, Inc.
+ * Copyright 2011-2018 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
@@ -49620,7 +49651,7 @@ _dereq_('../../js/affix.js')
 
   if (!$.fn.tooltip) throw new Error('Popover requires tooltip.js')
 
-  Popover.VERSION  = '3.3.7'
+  Popover.VERSION  = '3.4.0'
 
   Popover.DEFAULTS = $.extend({}, $.fn.tooltip.Constructor.DEFAULTS, {
     placement: 'right',
@@ -49668,8 +49699,8 @@ _dereq_('../../js/affix.js')
 
     return $e.attr('data-content')
       || (typeof o.content == 'function' ?
-            o.content.call($e[0]) :
-            o.content)
+        o.content.call($e[0]) :
+        o.content)
   }
 
   Popover.prototype.arrow = function () {
@@ -49710,10 +49741,10 @@ _dereq_('../../js/affix.js')
 
 },{}],22:[function(_dereq_,module,exports){
 /* ========================================================================
- * Bootstrap: scrollspy.js v3.3.7
- * http://getbootstrap.com/javascript/#scrollspy
+ * Bootstrap: scrollspy.js v3.4.0
+ * https://getbootstrap.com/docs/3.4/javascript/#scrollspy
  * ========================================================================
- * Copyright 2011-2016 Twitter, Inc.
+ * Copyright 2011-2018 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
@@ -49739,7 +49770,7 @@ _dereq_('../../js/affix.js')
     this.process()
   }
 
-  ScrollSpy.VERSION  = '3.3.7'
+  ScrollSpy.VERSION  = '3.4.0'
 
   ScrollSpy.DEFAULTS = {
     offset: 10
@@ -49884,10 +49915,10 @@ _dereq_('../../js/affix.js')
 
 },{}],23:[function(_dereq_,module,exports){
 /* ========================================================================
- * Bootstrap: tab.js v3.3.7
- * http://getbootstrap.com/javascript/#tabs
+ * Bootstrap: tab.js v3.4.0
+ * https://getbootstrap.com/docs/3.4/javascript/#tabs
  * ========================================================================
- * Copyright 2011-2016 Twitter, Inc.
+ * Copyright 2011-2018 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
@@ -49904,7 +49935,7 @@ _dereq_('../../js/affix.js')
     // jscs:enable requireDollarBeforejQueryAssignment
   }
 
-  Tab.VERSION = '3.3.7'
+  Tab.VERSION = '3.4.0'
 
   Tab.TRANSITION_DURATION = 150
 
@@ -49933,7 +49964,7 @@ _dereq_('../../js/affix.js')
 
     if (showEvent.isDefaultPrevented() || hideEvent.isDefaultPrevented()) return
 
-    var $target = $(selector)
+    var $target = $(document).find(selector)
 
     this.activate($this.closest('li'), $ul)
     this.activate($target, $target.parent(), function () {
@@ -49958,15 +49989,15 @@ _dereq_('../../js/affix.js')
       $active
         .removeClass('active')
         .find('> .dropdown-menu > .active')
-          .removeClass('active')
+        .removeClass('active')
         .end()
         .find('[data-toggle="tab"]')
-          .attr('aria-expanded', false)
+        .attr('aria-expanded', false)
 
       element
         .addClass('active')
         .find('[data-toggle="tab"]')
-          .attr('aria-expanded', true)
+        .attr('aria-expanded', true)
 
       if (transition) {
         element[0].offsetWidth // reflow for transition
@@ -49978,10 +50009,10 @@ _dereq_('../../js/affix.js')
       if (element.parent('.dropdown-menu').length) {
         element
           .closest('li.dropdown')
-            .addClass('active')
+          .addClass('active')
           .end()
           .find('[data-toggle="tab"]')
-            .attr('aria-expanded', true)
+          .attr('aria-expanded', true)
       }
 
       callback && callback()
@@ -50041,11 +50072,11 @@ _dereq_('../../js/affix.js')
 
 },{}],24:[function(_dereq_,module,exports){
 /* ========================================================================
- * Bootstrap: tooltip.js v3.3.7
- * http://getbootstrap.com/javascript/#tooltip
+ * Bootstrap: tooltip.js v3.4.0
+ * https://getbootstrap.com/docs/3.4/javascript/#tooltip
  * Inspired by the original jQuery.tipsy by Jason Frame
  * ========================================================================
- * Copyright 2011-2016 Twitter, Inc.
+ * Copyright 2011-2018 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
@@ -50068,7 +50099,7 @@ _dereq_('../../js/affix.js')
     this.init('tooltip', element, options)
   }
 
-  Tooltip.VERSION  = '3.3.7'
+  Tooltip.VERSION  = '3.4.0'
 
   Tooltip.TRANSITION_DURATION = 150
 
@@ -50093,7 +50124,7 @@ _dereq_('../../js/affix.js')
     this.type      = type
     this.$element  = $(element)
     this.options   = this.getOptions(options)
-    this.$viewport = this.options.viewport && $($.isFunction(this.options.viewport) ? this.options.viewport.call(this, this.$element) : (this.options.viewport.selector || this.options.viewport))
+    this.$viewport = this.options.viewport && $(document).find($.isFunction(this.options.viewport) ? this.options.viewport.call(this, this.$element) : (this.options.viewport.selector || this.options.viewport))
     this.inState   = { click: false, hover: false, focus: false }
 
     if (this.$element[0] instanceof document.constructor && !this.options.selector) {
@@ -50246,7 +50277,7 @@ _dereq_('../../js/affix.js')
         .addClass(placement)
         .data('bs.' + this.type, this)
 
-      this.options.container ? $tip.appendTo(this.options.container) : $tip.insertAfter(this.$element)
+      this.options.container ? $tip.appendTo($(document).find(this.options.container)) : $tip.insertAfter(this.$element)
       this.$element.trigger('inserted.bs.' + this.type)
 
       var pos          = this.getPosition()
@@ -50563,10 +50594,10 @@ _dereq_('../../js/affix.js')
 
 },{}],25:[function(_dereq_,module,exports){
 /* ========================================================================
- * Bootstrap: transition.js v3.3.7
- * http://getbootstrap.com/javascript/#transitions
+ * Bootstrap: transition.js v3.4.0
+ * https://getbootstrap.com/docs/3.4/javascript/#transitions
  * ========================================================================
- * Copyright 2011-2016 Twitter, Inc.
+ * Copyright 2011-2018 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
@@ -50574,7 +50605,7 @@ _dereq_('../../js/affix.js')
 +function ($) {
   'use strict';
 
-  // CSS TRANSITION SUPPORT (Shoutout: http://www.modernizr.com/)
+  // CSS TRANSITION SUPPORT (Shoutout: https://modernizr.com/)
   // ============================================================
 
   function transitionEnd() {
@@ -50596,7 +50627,7 @@ _dereq_('../../js/affix.js')
     return false // explicit for ie8 (  ._.)
   }
 
-  // http://blog.alexmaccaw.com/css-transitions
+  // https://blog.alexmaccaw.com/css-transitions
   $.fn.emulateTransitionEnd = function (duration) {
     var called = false
     var $el = this
@@ -53360,7 +53391,7 @@ for (var collections = getKeys(DOMIterables), i = 0; i < collections.length; i++
 }();
 
 }).call(this,_dereq_('_process'))
-},{"_process":461}],123:[function(_dereq_,module,exports){
+},{"_process":460}],123:[function(_dereq_,module,exports){
 (function (global){
 "use strict";
 
@@ -54247,8 +54278,8 @@ function () {
 
       options = Formio.pluginAlter('requestOptions', options, url);
 
-      if (options.namespace) {
-        opts.namespace = options.namespace;
+      if (options.namespace || Formio.namespace) {
+        opts.namespace = options.namespace || Formio.namespace;
       }
 
       var requestToken = options.headers.get('x-jwt-token');
@@ -54373,7 +54404,7 @@ function () {
       opts = typeof opts === 'string' ? {
         namespace: opts
       } : opts || {};
-      var tokenName = "".concat(opts.namespace || 'formio', "Token");
+      var tokenName = "".concat(opts.namespace || Formio.namespace || 'formio', "Token");
 
       if (!Formio.tokens) {
         Formio.tokens = {};
@@ -54414,7 +54445,7 @@ function () {
       options = typeof options === 'string' ? {
         namespace: options
       } : options || {};
-      var tokenName = "".concat(options.namespace || 'formio', "Token");
+      var tokenName = "".concat(options.namespace || Formio.namespace || 'formio', "Token");
 
       if (!Formio.tokens) {
         Formio.tokens = {};
@@ -54436,7 +54467,7 @@ function () {
     key: "setUser",
     value: function setUser(user) {
       var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-      var userName = "".concat(opts.namespace || 'formio', "User");
+      var userName = "".concat(opts.namespace || Formio.namespace || 'formio', "User");
 
       if (!user) {
         Formio.setToken(null, opts); // iOS in private browse mode will throw an error but we can't detect ahead of time that we are in private mode.
@@ -54463,7 +54494,7 @@ function () {
     key: "getUser",
     value: function getUser(options) {
       options = options || {};
-      var userName = "".concat(options.namespace || 'formio', "User");
+      var userName = "".concat(options.namespace || Formio.namespace || 'formio', "User");
 
       try {
         return JSON.parse(localStorage.getItem(userName) || null);
@@ -54879,7 +54910,7 @@ if ((typeof global === "undefined" ? "undefined" : _typeof(global)) === 'object'
   global.Formio = Formio;
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./providers":124,"browser-cookies":26,"core-js/modules/es6.array.iterator":103,"core-js/modules/es6.function.name":104,"core-js/modules/es6.number.constructor":105,"core-js/modules/es6.object.assign":106,"core-js/modules/es6.regexp.constructor":109,"core-js/modules/es6.regexp.match":111,"core-js/modules/es6.regexp.replace":112,"core-js/modules/es6.regexp.search":113,"core-js/modules/es6.regexp.split":114,"core-js/modules/es6.string.includes":116,"core-js/modules/es6.string.iterator":117,"core-js/modules/es6.symbol":118,"core-js/modules/es7.array.includes":119,"core-js/modules/es7.symbol.async-iterator":120,"core-js/modules/web.dom.iterable":121,"eventemitter2":122,"lodash/get":331,"native-promise-only":387,"shallow-copy":462,"whatwg-fetch":468}],124:[function(_dereq_,module,exports){
+},{"./providers":124,"browser-cookies":26,"core-js/modules/es6.array.iterator":103,"core-js/modules/es6.function.name":104,"core-js/modules/es6.number.constructor":105,"core-js/modules/es6.object.assign":106,"core-js/modules/es6.regexp.constructor":109,"core-js/modules/es6.regexp.match":111,"core-js/modules/es6.regexp.replace":112,"core-js/modules/es6.regexp.search":113,"core-js/modules/es6.regexp.split":114,"core-js/modules/es6.string.includes":116,"core-js/modules/es6.string.iterator":117,"core-js/modules/es6.symbol":118,"core-js/modules/es7.array.includes":119,"core-js/modules/es7.symbol.async-iterator":120,"core-js/modules/web.dom.iterable":121,"eventemitter2":122,"lodash/get":331,"native-promise-only":386,"shallow-copy":461,"whatwg-fetch":467}],124:[function(_dereq_,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -54903,8 +54934,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-_dereq_("core-js/modules/es6.regexp.replace");
-
 var _nativePromiseOnly = _interopRequireDefault(_dereq_("native-promise-only"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -54925,8 +54954,7 @@ var base64 = function base64() {
             name: fileName,
             url: url,
             size: file.size,
-            type: file.type,
-            data: url.replace("data:".concat(file.type, ";base64,"), '')
+            type: file.type
           });
         };
 
@@ -54947,7 +54975,7 @@ var base64 = function base64() {
 base64.title = 'Base64';
 var _default = base64;
 exports.default = _default;
-},{"core-js/modules/es6.regexp.replace":112,"native-promise-only":387}],126:[function(_dereq_,module,exports){
+},{"native-promise-only":386}],126:[function(_dereq_,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -55015,7 +55043,7 @@ var dropbox = function dropbox(formio) {
 dropbox.title = 'Dropbox';
 var _default = dropbox;
 exports.default = _default;
-},{"native-promise-only":387}],127:[function(_dereq_,module,exports){
+},{"native-promise-only":386}],127:[function(_dereq_,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -55164,7 +55192,7 @@ var s3 = function s3(formio) {
 s3.title = 'S3';
 var _default = s3;
 exports.default = _default;
-},{"lodash/trim":380,"native-promise-only":387}],129:[function(_dereq_,module,exports){
+},{"lodash/trim":380,"native-promise-only":386}],129:[function(_dereq_,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -55172,82 +55200,141 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+_dereq_("core-js/modules/es6.function.name");
+
 var _nativePromiseOnly = _interopRequireDefault(_dereq_("native-promise-only"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var url = function url(formio) {
-  return {
-    title: 'Url',
-    name: 'url',
-    uploadFile: function uploadFile(file, fileName, dir, progressCallback, url) {
-      return new _nativePromiseOnly.default(function (resolve, reject) {
-        var data = {
-          dir: dir,
-          file: file,
-          name: fileName
-        }; // Send the file with data.
+  var xhrRequest = function xhrRequest(url, name, query, data, onprogress) {
+    return new _nativePromiseOnly.default(function (resolve, reject) {
+      var xhr = new XMLHttpRequest();
+      var json = typeof data === 'string';
+      var fd = new FormData();
 
-        var xhr = new XMLHttpRequest();
+      if (typeof onprogress === 'function') {
+        xhr.upload.onprogress = onprogress;
+      }
 
-        if (typeof progressCallback === 'function') {
-          xhr.upload.onprogress = progressCallback;
-        }
-
-        var fd = new FormData();
-
+      if (!json) {
         for (var key in data) {
           fd.append(key, data[key]);
         }
+      }
 
-        xhr.onload = function () {
-          if (xhr.status >= 200 && xhr.status < 300) {
-            // Need to test if xhr.response is decoded or not.
-            var respData = {};
+      xhr.onload = function () {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          // Need to test if xhr.response is decoded or not.
+          var respData = {};
 
-            try {
-              respData = typeof xhr.response === 'string' ? JSON.parse(xhr.response) : {};
-              respData = respData && respData.data ? respData.data : respData;
-            } catch (err) {
-              respData = {};
-            }
+          try {
+            respData = typeof xhr.response === 'string' ? JSON.parse(xhr.response) : {};
+            respData = respData && respData.data ? respData.data : respData;
+          } catch (err) {
+            respData = {};
+          } // Get the url of the file.
 
-            var _url = respData.hasOwnProperty('url') ? respData.url : "".concat(xhr.responseURL, "/").concat(fileName);
 
-            resolve({
-              storage: 'url',
-              name: fileName,
-              url: _url,
-              size: file.size,
-              type: file.type,
-              data: respData
-            });
-          } else {
-            reject(xhr.response || 'Unable to upload file');
+          var respUrl = respData.hasOwnProperty('url') ? respData.url : "".concat(xhr.responseURL, "/").concat(name); // If they provide relative url, then prepend the url.
+
+          if (respUrl && respUrl[0] === '/') {
+            respUrl = "".concat(url).concat(respUrl);
           }
-        }; // Fire on network error.
 
-
-        xhr.onerror = function () {
-          return reject(xhr);
-        };
-
-        xhr.onabort = function () {
-          return reject(xhr);
-        };
-
-        xhr.open('POST', url);
-        var token = formio.getToken();
-
-        if (token) {
-          xhr.setRequestHeader('x-jwt-token', token);
+          resolve({
+            url: respUrl,
+            data: respData
+          });
+        } else {
+          reject(xhr.response || 'Unable to upload file');
         }
+      };
 
-        xhr.send(fd);
-      });
+      xhr.onerror = function () {
+        return reject(xhr);
+      };
+
+      xhr.onabort = function () {
+        return reject(xhr);
+      };
+
+      var requestUrl = "".concat(url, "?");
+
+      for (var _key in query) {
+        requestUrl += "".concat(_key, "=").concat(query[_key], "&");
+      }
+
+      if (requestUrl[requestUrl.length - 1] === '&') {
+        requestUrl = requestUrl.substr(0, requestUrl.length - 1);
+      }
+
+      xhr.open('POST', requestUrl);
+
+      if (json) {
+        xhr.setRequestHeader('Content-Type', 'application/json');
+      }
+
+      var token = formio.getToken();
+
+      if (token) {
+        xhr.setRequestHeader('x-jwt-token', token);
+      }
+
+      xhr.send(json ? data : fd);
+    });
+  };
+
+  return {
+    title: 'Url',
+    name: 'url',
+    uploadFile: function uploadFile(file, name, dir, progressCallback, url) {
+      var uploadRequest = function uploadRequest(form) {
+        return xhrRequest(url, name, {
+          baseUrl: encodeURIComponent(formio.projectUrl),
+          project: form ? form.project : '',
+          form: form ? form._id : ''
+        }, {
+          file: file,
+          name: name,
+          dir: dir
+        }, progressCallback).then(function (response) {
+          // Store the project and form url along with the metadata.
+          response.data = response.data || {};
+          response.data.baseUrl = formio.projectUrl;
+          response.data.project = form ? form.project : '';
+          response.data.form = form ? form._id : '';
+          return {
+            storage: 'url',
+            name: name,
+            url: response.url,
+            size: file.size,
+            type: file.type,
+            data: response.data
+          };
+        });
+      };
+
+      if (file.private && formio.formId) {
+        return formio.loadForm().then(function (form) {
+          return uploadRequest(form);
+        });
+      } else {
+        return uploadRequest();
+      }
     },
     downloadFile: function downloadFile(file) {
-      // Return the original as there is nothing to do.
+      if (file.private) {
+        if (formio.submissionId && file.data) {
+          file.data.submission = formio.submissionId;
+        }
+
+        return xhrRequest(file.url, file.name, {}, JSON.stringify(file)).then(function (response) {
+          return response.data;
+        });
+      } // Return the original as there is nothing to do.
+
+
       return _nativePromiseOnly.default.resolve(file);
     }
   };
@@ -55256,7 +55343,7 @@ var url = function url(formio) {
 url.title = 'Url';
 var _default = url;
 exports.default = _default;
-},{"native-promise-only":387}],130:[function(_dereq_,module,exports){
+},{"core-js/modules/es6.function.name":104,"native-promise-only":386}],130:[function(_dereq_,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -55273,6 +55360,9 @@ exports.parseFloatExt = parseFloatExt;
 exports.formatAsCurrency = formatAsCurrency;
 exports.escapeRegExCharacters = escapeRegExCharacters;
 exports.getValue = getValue;
+exports.getStrings = getStrings;
+
+_dereq_("core-js/modules/es6.array.iterator");
 
 _dereq_("core-js/modules/es6.string.iterator");
 
@@ -55583,7 +55673,98 @@ function getValue(submission, key) {
 
   return search(submission.data);
 }
-},{"core-js/modules/es6.array.from":102,"core-js/modules/es6.regexp.replace":112,"core-js/modules/es6.regexp.split":114,"core-js/modules/es6.regexp.to-string":115,"core-js/modules/es6.string.includes":116,"core-js/modules/es6.string.iterator":117,"core-js/modules/es7.array.includes":119,"core-js/modules/web.dom.iterable":121,"lodash/chunk":320,"lodash/clone":321,"lodash/forOwn":330,"lodash/get":331,"lodash/has":333,"lodash/isNaN":347,"lodash/isNil":348,"lodash/isPlainObject":352,"lodash/isString":354,"lodash/pad":366,"lodash/round":371}],131:[function(_dereq_,module,exports){
+/**
+ * Iterate over all components in a form and get string values for translation.
+ * @param form
+ */
+
+
+function getStrings(form) {
+  var _this = this;
+
+  var properties = ['label', 'title', 'legend', 'tooltip', 'description', 'placeholder', 'prefix', 'suffix', 'errorLabel'];
+  var strings = [];
+  eachComponent(form.components, function (component) {
+    properties.forEach(function (property) {
+      if (component.hasOwnProperty(property) && component[property]) {
+        strings.push({
+          key: component.key,
+          property: property,
+          string: component[property]
+        });
+      }
+    });
+
+    if ((!component.dataSrc || component.dataSrc === 'values') && component.hasOwnProperty('values') && Array.isArray(component.values) && component.values.length) {
+      component.values.forEach(function (value, index) {
+        strings.push({
+          key: component.key,
+          property: "value[".concat(index, "].label"),
+          string: component.values[index].label
+        });
+      });
+    } // Hard coded values from Day component
+
+
+    if (component.type === 'day') {
+      ['day', 'month', 'year', 'Day', 'Month', 'Year', 'january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'].forEach(function (string) {
+        strings.push({
+          key: component.key,
+          property: 'day',
+          string: string
+        });
+      });
+
+      if (component.fields.day.placeholder) {
+        strings.push({
+          key: component.key,
+          property: 'fields.day.placeholder',
+          string: component.fields.day.placeholder
+        });
+      }
+
+      if (component.fields.month.placeholder) {
+        strings.push({
+          key: component.key,
+          property: 'fields.month.placeholder',
+          string: component.fields.month.placeholder
+        });
+      }
+
+      if (component.fields.year.placeholder) {
+        strings.push({
+          key: component.key,
+          property: 'fields.year.placeholder',
+          string: component.fields.year.placeholder
+        });
+      }
+    }
+
+    if (component.type === 'editgrid') {
+      var string = _this.component.addAnother || 'Add Another';
+
+      if (component.addAnother) {
+        strings.push({
+          key: component.key,
+          property: 'addAnother',
+          string: string
+        });
+      }
+    }
+
+    if (component.type === 'select') {
+      ['loading...', 'Type to search'].forEach(function (string) {
+        strings.push({
+          key: component.key,
+          property: 'select',
+          string: string
+        });
+      });
+    }
+  }, true);
+  return strings;
+}
+},{"core-js/modules/es6.array.from":102,"core-js/modules/es6.array.iterator":103,"core-js/modules/es6.regexp.replace":112,"core-js/modules/es6.regexp.split":114,"core-js/modules/es6.regexp.to-string":115,"core-js/modules/es6.string.includes":116,"core-js/modules/es6.string.iterator":117,"core-js/modules/es7.array.includes":119,"core-js/modules/web.dom.iterable":121,"lodash/chunk":320,"lodash/clone":321,"lodash/forOwn":330,"lodash/get":331,"lodash/has":333,"lodash/isNaN":347,"lodash/isNil":348,"lodash/isPlainObject":352,"lodash/isString":354,"lodash/pad":366,"lodash/round":371}],131:[function(_dereq_,module,exports){
 (function (global){
 "use strict";
 
@@ -56335,7 +56516,7 @@ function loadZones(timezone) {
     return _momentTimezone.default.zonesPromise;
   }
 
-  return _momentTimezone.default.zonesPromise = fetch('https://cdn.rawgit.com/moment/moment-timezone/develop/data/packed/latest.json').then(function (resp) {
+  return _momentTimezone.default.zonesPromise = fetch('https://formio.github.io/formio.js/resources/latest.json').then(function (resp) {
     return resp.json().then(function (zones) {
       _momentTimezone.default.tz.load(zones);
 
@@ -56751,7 +56932,7 @@ function bootstrapVersion() {
 
   return 0;
 }
-},{"./formUtils":130,"./jsonlogic/operators":132,"core-js/modules/es6.array.from":102,"core-js/modules/es6.array.iterator":103,"core-js/modules/es6.function.name":104,"core-js/modules/es6.number.constructor":105,"core-js/modules/es6.object.keys":107,"core-js/modules/es6.reflect.construct":108,"core-js/modules/es6.regexp.constructor":109,"core-js/modules/es6.regexp.match":111,"core-js/modules/es6.regexp.replace":112,"core-js/modules/es6.regexp.split":114,"core-js/modules/es6.regexp.to-string":115,"core-js/modules/es6.string.includes":116,"core-js/modules/es6.string.iterator":117,"core-js/modules/es6.symbol":118,"core-js/modules/es7.array.includes":119,"core-js/modules/es7.symbol.async-iterator":120,"core-js/modules/web.dom.iterable":121,"json-logic-js":134,"jstimezonedetect":135,"lodash":359,"moment-timezone/moment-timezone":385,"native-promise-only":387,"whatwg-fetch":468}],134:[function(_dereq_,module,exports){
+},{"./formUtils":130,"./jsonlogic/operators":132,"core-js/modules/es6.array.from":102,"core-js/modules/es6.array.iterator":103,"core-js/modules/es6.function.name":104,"core-js/modules/es6.number.constructor":105,"core-js/modules/es6.object.keys":107,"core-js/modules/es6.reflect.construct":108,"core-js/modules/es6.regexp.constructor":109,"core-js/modules/es6.regexp.match":111,"core-js/modules/es6.regexp.replace":112,"core-js/modules/es6.regexp.split":114,"core-js/modules/es6.regexp.to-string":115,"core-js/modules/es6.string.includes":116,"core-js/modules/es6.string.iterator":117,"core-js/modules/es6.symbol":118,"core-js/modules/es7.array.includes":119,"core-js/modules/es7.symbol.async-iterator":120,"core-js/modules/web.dom.iterable":121,"json-logic-js":134,"jstimezonedetect":135,"lodash":359,"moment-timezone/moment-timezone":384,"native-promise-only":386,"whatwg-fetch":467}],134:[function(_dereq_,module,exports){
 /* globals define,module */
 /*
 Using a Universal Module Loader that should be browser, require, and AMD friendly
@@ -61501,7 +61682,7 @@ function createCompounder(callback) {
 
 module.exports = createCompounder;
 
-},{"./_arrayReduce":157,"./deburr":324,"./words":384}],237:[function(_dereq_,module,exports){
+},{"./_arrayReduce":157,"./deburr":324,"./words":383}],237:[function(_dereq_,module,exports){
 var baseRepeat = _dereq_('./_baseRepeat'),
     baseToString = _dereq_('./_baseToString'),
     castSlice = _dereq_('./_castSlice'),
@@ -63906,7 +64087,7 @@ function capitalize(string) {
 
 module.exports = capitalize;
 
-},{"./toString":379,"./upperFirst":382}],320:[function(_dereq_,module,exports){
+},{"./toString":379,"./upperFirst":381}],320:[function(_dereq_,module,exports){
 var baseSlice = _dereq_('./_baseSlice'),
     isIterateeCall = _dereq_('./_isIterateeCall'),
     toInteger = _dereq_('./toInteger');
@@ -83344,51 +83525,6 @@ function trim(string, chars, guard) {
 module.exports = trim;
 
 },{"./_baseToString":212,"./_castSlice":217,"./_charsEndIndex":218,"./_charsStartIndex":219,"./_stringToArray":310,"./toString":379}],381:[function(_dereq_,module,exports){
-var baseToString = _dereq_('./_baseToString'),
-    castSlice = _dereq_('./_castSlice'),
-    charsEndIndex = _dereq_('./_charsEndIndex'),
-    stringToArray = _dereq_('./_stringToArray'),
-    toString = _dereq_('./toString');
-
-/** Used to match leading and trailing whitespace. */
-var reTrimEnd = /\s+$/;
-
-/**
- * Removes trailing whitespace or specified characters from `string`.
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category String
- * @param {string} [string=''] The string to trim.
- * @param {string} [chars=whitespace] The characters to trim.
- * @param- {Object} [guard] Enables use as an iteratee for methods like `_.map`.
- * @returns {string} Returns the trimmed string.
- * @example
- *
- * _.trimEnd('  abc  ');
- * // => '  abc'
- *
- * _.trimEnd('-_-abc-_-', '_-');
- * // => '-_-abc'
- */
-function trimEnd(string, chars, guard) {
-  string = toString(string);
-  if (string && (guard || chars === undefined)) {
-    return string.replace(reTrimEnd, '');
-  }
-  if (!string || !(chars = baseToString(chars))) {
-    return string;
-  }
-  var strSymbols = stringToArray(string),
-      end = charsEndIndex(strSymbols, stringToArray(chars)) + 1;
-
-  return castSlice(strSymbols, 0, end).join('');
-}
-
-module.exports = trimEnd;
-
-},{"./_baseToString":212,"./_castSlice":217,"./_charsEndIndex":218,"./_stringToArray":310,"./toString":379}],382:[function(_dereq_,module,exports){
 var createCaseFirst = _dereq_('./_createCaseFirst');
 
 /**
@@ -83412,7 +83548,7 @@ var upperFirst = createCaseFirst('toUpperCase');
 
 module.exports = upperFirst;
 
-},{"./_createCaseFirst":235}],383:[function(_dereq_,module,exports){
+},{"./_createCaseFirst":235}],382:[function(_dereq_,module,exports){
 var baseDifference = _dereq_('./_baseDifference'),
     baseRest = _dereq_('./_baseRest'),
     isArrayLikeObject = _dereq_('./isArrayLikeObject');
@@ -83445,7 +83581,7 @@ var without = baseRest(function(array, values) {
 
 module.exports = without;
 
-},{"./_baseDifference":171,"./_baseRest":207,"./isArrayLikeObject":339}],384:[function(_dereq_,module,exports){
+},{"./_baseDifference":171,"./_baseRest":207,"./isArrayLikeObject":339}],383:[function(_dereq_,module,exports){
 var asciiWords = _dereq_('./_asciiWords'),
     hasUnicodeWord = _dereq_('./_hasUnicodeWord'),
     toString = _dereq_('./toString'),
@@ -83482,7 +83618,7 @@ function words(string, pattern, guard) {
 
 module.exports = words;
 
-},{"./_asciiWords":161,"./_hasUnicodeWord":259,"./_unicodeWords":316,"./toString":379}],385:[function(_dereq_,module,exports){
+},{"./_asciiWords":161,"./_hasUnicodeWord":259,"./_unicodeWords":316,"./toString":379}],384:[function(_dereq_,module,exports){
 //! moment-timezone.js
 //! version : 0.5.23
 //! Copyright (c) JS Foundation and other contributors
@@ -84097,7 +84233,7 @@ module.exports = words;
 	return moment;
 }));
 
-},{"moment":386}],386:[function(_dereq_,module,exports){
+},{"moment":385}],385:[function(_dereq_,module,exports){
 //! moment.js
 
 ;(function (global, factory) {
@@ -85359,7 +85495,7 @@ module.exports = words;
 
     var defaultLocaleWeek = {
         dow : 0, // Sunday is the first day of the week.
-        doy : 6  // The week that contains Jan 1st is the first week of the year.
+        doy : 6  // The week that contains Jan 6th is the first week of the year.
     };
 
     function localeFirstDayOfWeek () {
@@ -86235,13 +86371,13 @@ module.exports = words;
                     weekdayOverflow = true;
                 }
             } else if (w.e != null) {
-                // local weekday -- counting starts from begining of week
+                // local weekday -- counting starts from beginning of week
                 weekday = w.e + dow;
                 if (w.e < 0 || w.e > 6) {
                     weekdayOverflow = true;
                 }
             } else {
-                // default to begining of week
+                // default to beginning of week
                 weekday = dow;
             }
         }
@@ -86835,7 +86971,7 @@ module.exports = words;
             years = normalizedInput.year || 0,
             quarters = normalizedInput.quarter || 0,
             months = normalizedInput.month || 0,
-            weeks = normalizedInput.week || 0,
+            weeks = normalizedInput.week || normalizedInput.isoWeek || 0,
             days = normalizedInput.day || 0,
             hours = normalizedInput.hour || 0,
             minutes = normalizedInput.minute || 0,
@@ -87139,7 +87275,7 @@ module.exports = words;
                 ms : toInt(absRound(match[MILLISECOND] * 1000)) * sign // the millisecond decimal point is included in the match
             };
         } else if (!!(match = isoRegex.exec(input))) {
-            sign = (match[1] === '-') ? -1 : (match[1] === '+') ? 1 : 1;
+            sign = (match[1] === '-') ? -1 : 1;
             duration = {
                 y : parseIso(match[2], sign),
                 M : parseIso(match[3], sign),
@@ -87290,7 +87426,7 @@ module.exports = words;
         if (!(this.isValid() && localInput.isValid())) {
             return false;
         }
-        units = normalizeUnits(!isUndefined(units) ? units : 'millisecond');
+        units = normalizeUnits(units) || 'millisecond';
         if (units === 'millisecond') {
             return this.valueOf() > localInput.valueOf();
         } else {
@@ -87303,7 +87439,7 @@ module.exports = words;
         if (!(this.isValid() && localInput.isValid())) {
             return false;
         }
-        units = normalizeUnits(!isUndefined(units) ? units : 'millisecond');
+        units = normalizeUnits(units) || 'millisecond';
         if (units === 'millisecond') {
             return this.valueOf() < localInput.valueOf();
         } else {
@@ -87312,9 +87448,14 @@ module.exports = words;
     }
 
     function isBetween (from, to, units, inclusivity) {
+        var localFrom = isMoment(from) ? from : createLocal(from),
+            localTo = isMoment(to) ? to : createLocal(to);
+        if (!(this.isValid() && localFrom.isValid() && localTo.isValid())) {
+            return false;
+        }
         inclusivity = inclusivity || '()';
-        return (inclusivity[0] === '(' ? this.isAfter(from, units) : !this.isBefore(from, units)) &&
-            (inclusivity[1] === ')' ? this.isBefore(to, units) : !this.isAfter(to, units));
+        return (inclusivity[0] === '(' ? this.isAfter(localFrom, units) : !this.isBefore(localFrom, units)) &&
+            (inclusivity[1] === ')' ? this.isBefore(localTo, units) : !this.isAfter(localTo, units));
     }
 
     function isSame (input, units) {
@@ -87323,7 +87464,7 @@ module.exports = words;
         if (!(this.isValid() && localInput.isValid())) {
             return false;
         }
-        units = normalizeUnits(units || 'millisecond');
+        units = normalizeUnits(units) || 'millisecond';
         if (units === 'millisecond') {
             return this.valueOf() === localInput.valueOf();
         } else {
@@ -87333,11 +87474,11 @@ module.exports = words;
     }
 
     function isSameOrAfter (input, units) {
-        return this.isSame(input, units) || this.isAfter(input,units);
+        return this.isSame(input, units) || this.isAfter(input, units);
     }
 
     function isSameOrBefore (input, units) {
-        return this.isSame(input, units) || this.isBefore(input,units);
+        return this.isSame(input, units) || this.isBefore(input, units);
     }
 
     function diff (input, units, asFloat) {
@@ -88556,7 +88697,7 @@ module.exports = words;
     // Side effect imports
 
 
-    hooks.version = '2.22.2';
+    hooks.version = '2.23.0';
 
     setHookCallback(createLocal);
 
@@ -88597,7 +88738,7 @@ module.exports = words;
         TIME: 'HH:mm',                                  // <input type="time" />
         TIME_SECONDS: 'HH:mm:ss',                       // <input type="time" step="1" />
         TIME_MS: 'HH:mm:ss.SSS',                        // <input type="time" step="0.001" />
-        WEEK: 'YYYY-[W]WW',                             // <input type="week" />
+        WEEK: 'GGGG-[W]WW',                             // <input type="week" />
         MONTH: 'YYYY-MM'                                // <input type="month" />
     };
 
@@ -88605,7 +88746,7 @@ module.exports = words;
 
 })));
 
-},{}],387:[function(_dereq_,module,exports){
+},{}],386:[function(_dereq_,module,exports){
 (function (global,setImmediate){
 /*! Native Promise Only
     v0.8.1 (c) Kyle Simpson
@@ -88982,7 +89123,7 @@ module.exports = words;
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},_dereq_("timers").setImmediate)
-},{"timers":465}],388:[function(_dereq_,module,exports){
+},{"timers":464}],387:[function(_dereq_,module,exports){
 /*
  * ngDialog - easy modals and popup windows
  * http://github.com/likeastore/ngDialog
@@ -89937,7 +90078,7 @@ module.exports = words;
     return m;
 }));
 
-},{"angular":11}],389:[function(_dereq_,module,exports){
+},{"angular":11}],388:[function(_dereq_,module,exports){
 /**!
  * AngularJS file upload directives and services. Supports: file upload/drop/paste, resume, cancel/abort,
  * progress, resize, thumbnail, preview, validation and CORS
@@ -92837,10 +92978,10 @@ ngFileUpload.service('UploadExif', ['UploadResize', '$q', function (UploadResize
 }]);
 
 
-},{}],390:[function(_dereq_,module,exports){
+},{}],389:[function(_dereq_,module,exports){
 _dereq_('./dist/ng-file-upload-all');
 module.exports = 'ngFileUpload';
-},{"./dist/ng-file-upload-all":389}],391:[function(_dereq_,module,exports){
+},{"./dist/ng-file-upload-all":388}],390:[function(_dereq_,module,exports){
 "use strict";
 
 module.exports = function(app) {
@@ -92948,7 +93089,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],392:[function(_dereq_,module,exports){
+},{}],391:[function(_dereq_,module,exports){
 "use strict";
 
 var _merge = _dereq_('lodash/merge');
@@ -93189,7 +93330,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{"lodash/merge":363}],393:[function(_dereq_,module,exports){
+},{"lodash/merge":363}],392:[function(_dereq_,module,exports){
 "use strict";
 
 module.exports = function(app) {
@@ -93273,7 +93414,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],394:[function(_dereq_,module,exports){
+},{}],393:[function(_dereq_,module,exports){
 "use strict";
 
 var GridUtils = _dereq_('../factories/GridUtils')();
@@ -93367,7 +93508,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{"../factories/GridUtils":445}],395:[function(_dereq_,module,exports){
+},{"../factories/GridUtils":444}],394:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function(app) {
   app.provider('formioComponents', function() {
@@ -93439,7 +93580,7 @@ module.exports = function(app) {
   }]);
 };
 
-},{}],396:[function(_dereq_,module,exports){
+},{}],395:[function(_dereq_,module,exports){
 "use strict";
 
 var GridUtils = _dereq_('../factories/GridUtils')();
@@ -93511,7 +93652,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{"../factories/GridUtils":445}],397:[function(_dereq_,module,exports){
+},{"../factories/GridUtils":444}],396:[function(_dereq_,module,exports){
 "use strict";
 
 module.exports = function(app) {
@@ -93540,7 +93681,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],398:[function(_dereq_,module,exports){
+},{}],397:[function(_dereq_,module,exports){
 "use strict";
 
 var createNumberMask = _dereq_('text-mask-addons').createNumberMask;
@@ -93628,7 +93769,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{"lodash/get":331,"lodash/isNil":348,"text-mask-addons":464}],399:[function(_dereq_,module,exports){
+},{"lodash/get":331,"lodash/isNil":348,"text-mask-addons":463}],398:[function(_dereq_,module,exports){
 "use strict";
 
 var GridUtils = _dereq_('../factories/GridUtils')();
@@ -93656,7 +93797,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{"../factories/GridUtils":445}],400:[function(_dereq_,module,exports){
+},{"../factories/GridUtils":444}],399:[function(_dereq_,module,exports){
 "use strict";
 
 var formioUtils = _dereq_('formiojs/utils').default;
@@ -93793,7 +93934,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{"formiojs/utils":131}],401:[function(_dereq_,module,exports){
+},{"formiojs/utils":131}],400:[function(_dereq_,module,exports){
 "use strict";
 
 var _get = _dereq_('lodash/get');
@@ -93911,29 +94052,10 @@ module.exports = function(app) {
   ]);
 };
 
-},{"lodash/get":331}],402:[function(_dereq_,module,exports){
+},{"lodash/get":331}],401:[function(_dereq_,module,exports){
 "use strict";
 
-var _get = _dereq_('lodash/get');
-var _trimEnd = _dereq_('lodash/trimEnd');
 module.exports = function(app) {
-  var getDateParts = function(component, value) {
-    var showDay = !_get(component, 'fields.day.hide', false);
-    var showMonth = !_get(component, 'fields.month.hide', false);
-    var showYear = !_get(component, 'fields.year.hide', false);
-    var parts = (typeof value === 'string') ? value.split('/') : value;
-    if (parts instanceof Array) {
-      return {
-        day: showDay ? Number(parts[(component.dayFirst ? 0 : 1)]) : 0,
-        month: showMonth ? Number(parts[(component.dayFirst ? 1 : 0)]) : 0,
-        year: showYear ? Number(parts[parts.length - 1]) : 0
-      };
-    }
-    else {
-      return null;
-    }
-  };
-
   app.directive('dayInput', function() {
     return {
       restrict: 'E',
@@ -94020,11 +94142,13 @@ module.exports = function(app) {
         scope.$watch('ngModel', function() {
           // Only update on load.
           if (ngModel.$viewValue && !ngModel.$dirty) {
-            var dateParts = getDateParts(scope.component, ngModel.$viewValue);
-            if (dateParts) {
-              scope.date.day = dateParts.day;
-              scope.date.month = padLeft(dateParts.month.toString(), 2);
-              scope.date.year = dateParts.year;
+            var parts = typeof ngModel.$viewValue === 'string'
+              ? ngModel.$viewValue.split('/')
+              : ngModel.$viewValue;
+            if ((parts instanceof Array) && parts.length === 3) {
+              scope.date.day = Number(parts[(scope.component.dayFirst ? 0 : 1)]);
+              scope.date.month = parts[(scope.component.dayFirst ? 1 : 0)];
+              scope.date.year = Number(parts[2]);
             }
           }
         });
@@ -94042,54 +94166,36 @@ module.exports = function(app) {
           var day = padLeft(scope.date.day, 2);
           var month = padLeft(scope.date.month, 2);
           var year = padLeft(scope.date.year, 4);
-          var value = '';
-          var showDay = !_get(scope.component, 'fields.day.hide', false);
-          var showMonth = !_get(scope.component, 'fields.month.hide', false);
-          var showYear = !_get(scope.component, 'fields.year.hide', false);
-          if (showDay && scope.component.dayFirst) {
-            value += day + '/';
-          }
-          else if (showMonth && !scope.component.dayFirst) {
-            value += month + '/';
-          }
-
-          if (showDay && !scope.component.dayFirst) {
-            value += day + '/';
-          }
-          else if (showMonth && scope.component.dayFirst) {
-            value += month + '/';
-          }
-
-          if (showYear) {
-            value += year;
-          }
-          ngModel.$setViewValue(_trimEnd(value, '/'));
+          var value = scope.component.dayFirst ? day : month;
+          value += '/';
+          value += scope.component.dayFirst ? month : day;
+          value += '/' + year;
+          ngModel.$setViewValue(value);
         };
 
         ngModel.$validators.day = function(modelValue, viewValue) {
           var value = modelValue || viewValue;
-          var showDay = !_get(scope.component, 'fields.day.hide', false);
-          var showMonth = !_get(scope.component, 'fields.month.hide', false);
-          var showYear = !_get(scope.component, 'fields.year.hide', false);
-          var dayRequired = showDay && _get(scope.component, 'fields.day.required', false);
-          var monthRequired = showMonth && _get(scope.component, 'fields.month.required', false);
-          var yearRequired = showYear && _get(scope.component, 'fields.year.required', false);
-          var required = dayRequired || monthRequired || yearRequired;
+          var required = scope.component.fields.day.required || scope.component.fields.month.required || scope.component.fields.year.required;
+
           if (!required) {
             return true;
           }
           if (!value && required) {
             return false;
           }
-          var dateParts = getDateParts(scope.component, value);
-          if (dateParts) {
-            if (dayRequired && !dateParts.day) {
+          var parts = value.split('/');
+          if (scope.component.fields.day.required) {
+            if (parts[(scope.component.dayFirst ? 0 : 1)] === '00') {
               return false;
             }
-            if (monthRequired && !dateParts.month) {
+          }
+          if (scope.component.fields.month.required) {
+            if (parts[(scope.component.dayFirst ? 1 : 0)] === '00') {
               return false;
             }
-            if (yearRequired && !dateParts.year) {
+          }
+          if (scope.component.fields.year.required) {
+            if (parts[2] === '0000') {
               return false;
             }
           }
@@ -94198,7 +94304,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{"lodash/get":331,"lodash/trimEnd":381}],403:[function(_dereq_,module,exports){
+},{}],402:[function(_dereq_,module,exports){
 "use strict";
 
 var formioUtils = _dereq_('formiojs/utils').default;
@@ -94624,7 +94730,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{"formiojs/utils":131}],404:[function(_dereq_,module,exports){
+},{"formiojs/utils":131}],403:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function(app) {
   app.config([
@@ -94659,7 +94765,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],405:[function(_dereq_,module,exports){
+},{}],404:[function(_dereq_,module,exports){
 "use strict";
 
 var GridUtils = _dereq_('../factories/GridUtils')();
@@ -94721,7 +94827,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{"../factories/GridUtils":445}],406:[function(_dereq_,module,exports){
+},{"../factories/GridUtils":444}],405:[function(_dereq_,module,exports){
 "use strict";
 
 module.exports = function(app) {
@@ -94747,6 +94853,7 @@ module.exports = function(app) {
           label: '',
           key: 'file',
           image: false,
+          privateDownload: true,
           imageSize: '200',
           placeholder: '',
           multiple: false,
@@ -95000,7 +95107,14 @@ module.exports = function(app) {
             };
             var dir = $scope.component.dir || '';
             dir = $interpolate(dir)({data: $scope.data, row: $scope.row});
-            var formio = $scope.formio || new Formio();
+            var formio = null;
+            if ($scope.formio) {
+              formio = $scope.formio;
+            }
+            else {
+              $scope.fileUploads[fileName].status = 'error';
+              $scope.fileUploads[fileName].message = 'File Upload URL not provided.';
+            }
 
             if (formio) {
               formio.uploadFile($scope.component.storage, file, fileName, dir, function processNotify(evt) {
@@ -95066,7 +95180,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],407:[function(_dereq_,module,exports){
+},{}],406:[function(_dereq_,module,exports){
 "use strict";
 
 var isEmpty = _dereq_('lodash/isEmpty');
@@ -95241,7 +95355,7 @@ module.exports = function(app) {
         ],
         tableView: function(data, options) {
           // Include only form data.
-          return data ? GridUtils.generic(data.data, options) : '';
+          return GridUtils.generic(data.data, options);
         }
       });
     }
@@ -95256,7 +95370,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{"../factories/GridUtils":445,"lodash/isEmpty":341}],408:[function(_dereq_,module,exports){
+},{"../factories/GridUtils":444,"lodash/isEmpty":341}],407:[function(_dereq_,module,exports){
 "use strict";
 
 var GridUtils = _dereq_('../factories/GridUtils')();
@@ -95292,7 +95406,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{"../factories/GridUtils":445}],409:[function(_dereq_,module,exports){
+},{"../factories/GridUtils":444}],408:[function(_dereq_,module,exports){
 "use strict";
 
 
@@ -95386,7 +95500,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],410:[function(_dereq_,module,exports){
+},{}],409:[function(_dereq_,module,exports){
 "use strict";
 var app = angular.module('formio');
 
@@ -95431,7 +95545,7 @@ _dereq_('./panel')(app);
 _dereq_('./table')(app);
 _dereq_('./well')(app);
 
-},{"./address":391,"./button":392,"./checkbox":393,"./columns":394,"./components":395,"./container":396,"./content":397,"./currency":398,"./custom":399,"./datagrid":400,"./datetime":401,"./day":402,"./editgrid":403,"./email":404,"./fieldset":405,"./file":406,"./form":407,"./hidden":408,"./htmlelement":409,"./number":411,"./page":412,"./panel":413,"./password":414,"./phonenumber":415,"./radio":416,"./resource":417,"./select":418,"./selectboxes":419,"./signature":420,"./survey":421,"./table":422,"./textarea":423,"./textfield":424,"./time":425,"./well":426}],411:[function(_dereq_,module,exports){
+},{"./address":390,"./button":391,"./checkbox":392,"./columns":393,"./components":394,"./container":395,"./content":396,"./currency":397,"./custom":398,"./datagrid":399,"./datetime":400,"./day":401,"./editgrid":402,"./email":403,"./fieldset":404,"./file":405,"./form":406,"./hidden":407,"./htmlelement":408,"./number":410,"./page":411,"./panel":412,"./password":413,"./phonenumber":414,"./radio":415,"./resource":416,"./select":417,"./selectboxes":418,"./signature":419,"./survey":420,"./table":421,"./textarea":422,"./textfield":423,"./time":424,"./well":425}],410:[function(_dereq_,module,exports){
 "use strict";
 
 var createNumberMask = _dereq_('text-mask-addons').createNumberMask;
@@ -95528,7 +95642,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{"lodash/get":331,"lodash/isNil":348,"text-mask-addons":464}],412:[function(_dereq_,module,exports){
+},{"lodash/get":331,"lodash/isNil":348,"text-mask-addons":463}],411:[function(_dereq_,module,exports){
 "use strict";
 
 module.exports = function(app) {
@@ -95555,7 +95669,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],413:[function(_dereq_,module,exports){
+},{}],412:[function(_dereq_,module,exports){
 "use strict";
 
 var GridUtils = _dereq_('../factories/GridUtils')();
@@ -95618,7 +95732,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{"../factories/GridUtils":445}],414:[function(_dereq_,module,exports){
+},{"../factories/GridUtils":444}],413:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function(app) {
   app.config([
@@ -95650,7 +95764,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],415:[function(_dereq_,module,exports){
+},{}],414:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function(app) {
   app.config([
@@ -95687,7 +95801,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],416:[function(_dereq_,module,exports){
+},{}],415:[function(_dereq_,module,exports){
 "use strict";
 
 
@@ -95740,7 +95854,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],417:[function(_dereq_,module,exports){
+},{}],416:[function(_dereq_,module,exports){
 "use strict";
 
 module.exports = function(app) {
@@ -95990,7 +96104,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],418:[function(_dereq_,module,exports){
+},{}],417:[function(_dereq_,module,exports){
 "use strict";
 /*eslint max-depth: ["error", 6]*/
 
@@ -96166,12 +96280,6 @@ module.exports = function(app) {
             $scope.$on('refreshList', function(event, url, input) {
               $scope.refreshItems(input, url);
             });
-
-            $scope.clearSelected = function(event) {
-              event.stopPropagation();
-              event.preventDefault();
-              delete $scope.data[$scope.component.key];
-            };
 
             var refreshing = false;
             var refreshValue = function() {
@@ -96600,7 +96708,7 @@ module.exports = function(app) {
     '$templateCache',
     function($templateCache) {
       $templateCache.put('formio/components/select.html',
-        "<label ng-if=\"labelVisible() && (component.labelPosition !== 'bottom')\" for=\"{{ componentId }}\" id=\"{{ componentId+'Label' }}\" class=\"control-label\" ng-class=\"{'field-required': isRequired(component)}\"\n       ng-style=\"getLabelStyles(component)\">\n  {{ component.label | formioTranslate:null:options.building }}\n  <formio-component-tooltip></formio-component-tooltip>\n</label>\n<span ng-if=\"!component.label && isRequired(component)\" class=\"glyphicon glyphicon-asterisk form-control-feedback field-required-inline\" aria-hidden=\"true\"></span>\n<ui-select\n  ui-select-required\n  ng-model=\"data[component.key]\"\n  ng-model-options=\"{allowInvalid: true}\"\n  safe-multiple-to-single\n  auto-focus=\"true\"\n  aria-labelledby=\"{{ componentId +'Label'}}\"\n  aria-describedby=\"{{componentId + 'Desc'}}\"\n  name=\"{{ componentId }}\"\n  ng-disabled=\"readOnly\"\n  ng-required=\"isRequired(component)\"\n  id=\"{{ componentId }}\"\n  theme=\"bootstrap\"\n  custom-validator=\"component.validate.custom\"\n  tabindex=\"{{ component.tabindex || 0 }}\"\n  ng-style=\"getInputGroupStyles(component)\"\n>\n  <ui-select-match class=\"ui-select-match\" placeholder=\"{{ component.placeholder | formioTranslate:null:options.building }}\" allow-clear=\"!component.validate.required\">\n    <formio-select-item template=\"component.template\" item=\"$item || $select.selected\" select=\"$select\"></formio-select-item>\n    <span ng-if=\"!component.multiple && !component.validate.required\" class=\"close ui-select-match-close\" ng-hide=\"$select.disabled\" ng-click=\"clearSelected($event)\" style=\"position:absolute;top:3px;right:1.2em;width:auto;\">×</span>\n  </ui-select-match>\n  <ui-select-choices class=\"ui-select-choices\" repeat=\"getSelectItem(item) as item in selectItems | filter: $select.search\" refresh=\"refreshItems($select.search)\" refresh-delay=\"250\">\n    <formio-select-item template=\"component.template\" item=\"item\" select=\"$select\"></formio-select-item>\n    <button ng-if=\"hasNextPage && ($index == $select.items.length-1)\" class=\"btn btn-success btn-block\" ng-click=\"loadMoreItems($select, $event)\" ng-disabled=\"selectLoading\">Load more...</button>\n  </ui-select-choices>\n</ui-select>\n<label ng-if=\"labelVisible() && (component.labelPosition === 'bottom')\" for=\"{{ componentId }}\" class=\"control-label control-label--bottom\" ng-class=\"{'field-required': isRequired(component)}\">\n  {{ component.label | formioTranslate:null:options.building }}\n  <formio-component-tooltip></formio-component-tooltip>\n</label>\n<div ng-if=\"!!component.description\" class=\"help-block\">\n  <span id=\"{{ componentId+'Desc' }}\">{{ component.description }}</span>\n</div>\n<formio-errors ng-if=\"::!options.building\"></formio-errors>\n"
+        "<label ng-if=\"labelVisible() && (component.labelPosition !== 'bottom')\" for=\"{{ componentId }}\" id=\"{{ componentId+'Label' }}\" class=\"control-label\" ng-class=\"{'field-required': isRequired(component)}\"\n       ng-style=\"getLabelStyles(component)\">\n  {{ component.label | formioTranslate:null:options.building }}\n  <formio-component-tooltip></formio-component-tooltip>\n</label>\n<span ng-if=\"!component.label && isRequired(component)\" class=\"glyphicon glyphicon-asterisk form-control-feedback field-required-inline\" aria-hidden=\"true\"></span>\n<ui-select\n  ui-select-required\n  ng-model=\"data[component.key]\"\n  ng-model-options=\"{allowInvalid: true}\"\n  safe-multiple-to-single\n  auto-focus=\"true\"\n  aria-labelledby=\"{{ componentId +'Label'}}\"\n  aria-describedby=\"{{componentId + 'Desc'}}\"\n  name=\"{{ componentId }}\"\n  ng-disabled=\"readOnly\"\n  ng-required=\"isRequired(component)\"\n  id=\"{{ componentId }}\"\n  theme=\"bootstrap\"\n  custom-validator=\"component.validate.custom\"\n  tabindex=\"{{ component.tabindex || 0 }}\"\n  ng-style=\"getInputGroupStyles(component)\"\n>\n  <ui-select-match class=\"ui-select-match\" placeholder=\"{{ component.placeholder | formioTranslate:null:options.building }}\">\n    <formio-select-item template=\"component.template\" item=\"$item || $select.selected\" select=\"$select\"></formio-select-item>\n  </ui-select-match>\n  <ui-select-choices class=\"ui-select-choices\" repeat=\"getSelectItem(item) as item in selectItems | filter: $select.search\" refresh=\"refreshItems($select.search)\" refresh-delay=\"250\">\n    <formio-select-item template=\"component.template\" item=\"item\" select=\"$select\"></formio-select-item>\n    <button ng-if=\"hasNextPage && ($index == $select.items.length-1)\" class=\"btn btn-success btn-block\" ng-click=\"loadMoreItems($select, $event)\" ng-disabled=\"selectLoading\">Load more...</button>\n  </ui-select-choices>\n</ui-select>\n<label ng-if=\"labelVisible() && (component.labelPosition === 'bottom')\" for=\"{{ componentId }}\" class=\"control-label control-label--bottom\" ng-class=\"{'field-required': isRequired(component)}\">\n  {{ component.label | formioTranslate:null:options.building }}\n  <formio-component-tooltip></formio-component-tooltip>\n</label>\n<div ng-if=\"!!component.description\" class=\"help-block\">\n  <span id=\"{{ componentId+'Desc' }}\">{{ component.description }}</span>\n</div>\n<formio-errors ng-if=\"::!options.building\"></formio-errors>\n"
       );
 
       // Change the ui-select to ui-select multiple.
@@ -96611,7 +96719,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{"lodash/assign":317,"lodash/cloneDeep":322,"lodash/get":331,"lodash/isEqual":342,"lodash/isNil":348,"lodash/mapValues":361,"lodash/set":372}],419:[function(_dereq_,module,exports){
+},{"lodash/assign":317,"lodash/cloneDeep":322,"lodash/get":331,"lodash/isEqual":342,"lodash/isNil":348,"lodash/mapValues":361,"lodash/set":372}],418:[function(_dereq_,module,exports){
 "use strict";
 
 
@@ -96737,7 +96845,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],420:[function(_dereq_,module,exports){
+},{}],419:[function(_dereq_,module,exports){
 "use strict";
 
 var SignaturePad = _dereq_('signature_pad');
@@ -96879,7 +96987,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{"signature_pad":463}],421:[function(_dereq_,module,exports){
+},{"signature_pad":462}],420:[function(_dereq_,module,exports){
 "use strict";
 
 
@@ -96940,7 +97048,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],422:[function(_dereq_,module,exports){
+},{}],421:[function(_dereq_,module,exports){
 "use strict";
 
 var GridUtils = _dereq_('../factories/GridUtils')();
@@ -97026,7 +97134,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{"../factories/GridUtils":445}],423:[function(_dereq_,module,exports){
+},{"../factories/GridUtils":444}],422:[function(_dereq_,module,exports){
 "use strict";
 
 module.exports = function(app) {
@@ -97167,7 +97275,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],424:[function(_dereq_,module,exports){
+},{}],423:[function(_dereq_,module,exports){
 "use strict";
 
 
@@ -97230,7 +97338,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],425:[function(_dereq_,module,exports){
+},{}],424:[function(_dereq_,module,exports){
 "use strict";
 
 var moment = _dereq_('moment');
@@ -97303,7 +97411,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{"moment":386}],426:[function(_dereq_,module,exports){
+},{"moment":385}],425:[function(_dereq_,module,exports){
 "use strict";
 
 var GridUtils = _dereq_('../factories/GridUtils')();
@@ -97363,7 +97471,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{"../factories/GridUtils":445}],427:[function(_dereq_,module,exports){
+},{"../factories/GridUtils":444}],426:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function() {
   return {
@@ -97441,7 +97549,7 @@ module.exports = function() {
   };
 };
 
-},{}],428:[function(_dereq_,module,exports){
+},{}],427:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function() {
   return {
@@ -97540,7 +97648,6 @@ module.exports = function() {
             form.projectUrl = $scope.formio.projectUrl;
             form.url = $scope.formio.formUrl;
             form.base = $scope.formio.base;
-            sendIframeMessage({name: 'token', data: Formio.getToken()});
           }
           sendIframeMessage({name: 'form', data: form});
         };
@@ -98009,7 +98116,7 @@ module.exports = function() {
   };
 };
 
-},{}],429:[function(_dereq_,module,exports){
+},{}],428:[function(_dereq_,module,exports){
 "use strict";
 module.exports = ['$sce', '$parse', '$compile', function($sce, $parse, $compile) {
   return {
@@ -98026,7 +98133,7 @@ module.exports = ['$sce', '$parse', '$compile', function($sce, $parse, $compile)
   };
 }];
 
-},{}],430:[function(_dereq_,module,exports){
+},{}],429:[function(_dereq_,module,exports){
 "use strict";
 var _get = _dereq_('lodash/get');
 var moment = _dereq_('moment');
@@ -98401,7 +98508,7 @@ module.exports = [
   }
 ];
 
-},{"lodash/get":331,"moment":386}],431:[function(_dereq_,module,exports){
+},{"lodash/get":331,"moment":385}],430:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function() {
   return {
@@ -98417,7 +98524,7 @@ module.exports = function() {
   };
 };
 
-},{}],432:[function(_dereq_,module,exports){
+},{}],431:[function(_dereq_,module,exports){
 "use strict";
 module.exports = [
   'formioComponents',
@@ -98490,7 +98597,7 @@ module.exports = [
   }
 ];
 
-},{}],433:[function(_dereq_,module,exports){
+},{}],432:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function() {
   return {
@@ -98575,7 +98682,7 @@ module.exports = function() {
   };
 };
 
-},{}],434:[function(_dereq_,module,exports){
+},{}],433:[function(_dereq_,module,exports){
 "use strict";
 module.exports = [
   '$compile',
@@ -98594,7 +98701,7 @@ module.exports = [
   }
 ];
 
-},{}],435:[function(_dereq_,module,exports){
+},{}],434:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function() {
   return {
@@ -98604,7 +98711,7 @@ module.exports = function() {
   };
 };
 
-},{}],436:[function(_dereq_,module,exports){
+},{}],435:[function(_dereq_,module,exports){
 "use strict";
 var maskInput = _dereq_('vanilla-text-mask').default;
 var createNumberMask = _dereq_('text-mask-addons').createNumberMask;
@@ -98789,7 +98896,7 @@ module.exports = ['FormioUtils', function(FormioUtils) {
   };
 }];
 
-},{"formiojs/utils":131,"lodash":359,"text-mask-addons":464,"vanilla-text-mask":467}],437:[function(_dereq_,module,exports){
+},{"formiojs/utils":131,"lodash":359,"text-mask-addons":463,"vanilla-text-mask":466}],436:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function() {
   return {
@@ -98816,7 +98923,7 @@ module.exports = function() {
     }
   };
 };
-},{}],438:[function(_dereq_,module,exports){
+},{}],437:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function() {
   return {
@@ -98844,7 +98951,7 @@ module.exports = function() {
   };
 };
 
-},{}],439:[function(_dereq_,module,exports){
+},{}],438:[function(_dereq_,module,exports){
 "use strict";
 var _map = _dereq_('lodash/map');
 // Javascript editor directive
@@ -98920,7 +99027,7 @@ module.exports = ['FormioUtils', function(FormioUtils) {
   };
 }];
 
-},{"lodash/map":360}],440:[function(_dereq_,module,exports){
+},{"lodash/map":360}],439:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function() {
   return {
@@ -98952,7 +99059,7 @@ module.exports = function() {
   };
 };
 
-},{}],441:[function(_dereq_,module,exports){
+},{}],440:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function() {
   return {
@@ -99008,7 +99115,7 @@ module.exports = function() {
   };
 };
 
-},{}],442:[function(_dereq_,module,exports){
+},{}],441:[function(_dereq_,module,exports){
 "use strict";
 var isNaN = _dereq_('lodash/isNaN');
 var isFinite = _dereq_('lodash/isFinite');
@@ -99650,7 +99757,7 @@ module.exports = function() {
   };
 };
 
-},{"lodash/isEmpty":341,"lodash/isFinite":343,"lodash/isNaN":347}],443:[function(_dereq_,module,exports){
+},{"lodash/isEmpty":341,"lodash/isFinite":343,"lodash/isNaN":347}],442:[function(_dereq_,module,exports){
 "use strict";
 module.exports = [
   'Formio',
@@ -99847,7 +99954,7 @@ module.exports = [
   }
 ];
 
-},{}],444:[function(_dereq_,module,exports){
+},{}],443:[function(_dereq_,module,exports){
 "use strict";
 var formioUtils = _dereq_('formiojs/utils').default;
 var conformToMask = _dereq_('vanilla-text-mask').conformToMask;
@@ -99970,7 +100077,7 @@ module.exports = function() {
         data[component.key] = data[component.key].split(',');
         return done(true);
       }
-      else if (component.customDefaultValue) {
+      else if (component.hasOwnProperty('customDefaultValue')) {
         if (typeof component.customDefaultValue === 'string') {
           try {
             value = eval('(function(data) { var value = "";' + component.customDefaultValue + '; return value; })(data)');
@@ -100339,7 +100446,7 @@ module.exports = function() {
   };
 };
 
-},{"formiojs/utils":131,"lodash/filter":328,"lodash/get":331,"vanilla-text-mask":467}],445:[function(_dereq_,module,exports){
+},{"formiojs/utils":131,"lodash/filter":328,"lodash/get":331,"vanilla-text-mask":466}],444:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function() {
   var generic = function(data, options) {
@@ -100466,7 +100573,7 @@ module.exports = function() {
   };
 };
 
-},{}],446:[function(_dereq_,module,exports){
+},{}],445:[function(_dereq_,module,exports){
 "use strict";
 module.exports = [
   '$q',
@@ -100515,7 +100622,7 @@ module.exports = [
   }
 ];
 
-},{}],447:[function(_dereq_,module,exports){
+},{}],446:[function(_dereq_,module,exports){
 "use strict";
 module.exports = [
   'Formio',
@@ -100561,7 +100668,7 @@ module.exports = [
   }
 ];
 
-},{}],448:[function(_dereq_,module,exports){
+},{}],447:[function(_dereq_,module,exports){
 "use strict";
 module.exports = [
   'FormioUtils',
@@ -100570,7 +100677,7 @@ module.exports = [
   }
 ];
 
-},{}],449:[function(_dereq_,module,exports){
+},{}],448:[function(_dereq_,module,exports){
 "use strict";
 module.exports = [
   '$sce',
@@ -100583,7 +100690,7 @@ module.exports = [
   }
 ];
 
-},{}],450:[function(_dereq_,module,exports){
+},{}],449:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function() {
     return function(label, shortcut) {
@@ -100605,7 +100712,7 @@ module.exports = function() {
     };
   }
   
-},{}],451:[function(_dereq_,module,exports){
+},{}],450:[function(_dereq_,module,exports){
 "use strict";
 module.exports = [
   function() {
@@ -100624,7 +100731,7 @@ module.exports = [
   }
 ];
 
-},{}],452:[function(_dereq_,module,exports){
+},{}],451:[function(_dereq_,module,exports){
 "use strict";
 module.exports = [
   'formioTableView',
@@ -100637,7 +100744,7 @@ module.exports = [
   }
 ];
 
-},{}],453:[function(_dereq_,module,exports){
+},{}],452:[function(_dereq_,module,exports){
 "use strict";
 module.exports = [
   'FormioUtils',
@@ -100652,7 +100759,7 @@ module.exports = [
   }
 ];
 
-},{}],454:[function(_dereq_,module,exports){
+},{}],453:[function(_dereq_,module,exports){
 "use strict";
 module.exports = [
   '$filter',
@@ -100709,7 +100816,7 @@ module.exports = [
   }
 ];
 
-},{}],455:[function(_dereq_,module,exports){
+},{}],454:[function(_dereq_,module,exports){
 "use strict";
 module.exports = ['$sce', function($sce) {
   return function(val) {
@@ -100717,7 +100824,7 @@ module.exports = ['$sce', function($sce) {
   };
 }];
 
-},{}],456:[function(_dereq_,module,exports){
+},{}],455:[function(_dereq_,module,exports){
 "use strict";
 _dereq_('ui-select/dist/select');
 _dereq_('angular-moment');
@@ -100732,7 +100839,7 @@ _dereq_('ng-dialog');
 _dereq_('angular-ui-ace/src/ui-ace');
 _dereq_('./formio');
 
-},{"./formio":457,"angular-ckeditor":1,"angular-file-saver":3,"angular-moment":4,"angular-sanitize":6,"angular-ui-ace/src/ui-ace":7,"angular-ui-bootstrap":9,"bootstrap":13,"bootstrap-ui-datetime-picker/dist/datetime-picker":12,"ng-dialog":388,"ng-file-upload":390,"ui-select/dist/select":466}],457:[function(_dereq_,module,exports){
+},{"./formio":456,"angular-ckeditor":1,"angular-file-saver":3,"angular-moment":4,"angular-sanitize":6,"angular-ui-ace/src/ui-ace":7,"angular-ui-bootstrap":9,"bootstrap":13,"bootstrap-ui-datetime-picker/dist/datetime-picker":12,"ng-dialog":387,"ng-file-upload":389,"ui-select/dist/select":465}],456:[function(_dereq_,module,exports){
 "use strict";
 _dereq_('./polyfills/polyfills');
 
@@ -100896,7 +101003,7 @@ app.run([
 
 _dereq_('./components');
 
-},{"./components":410,"./directives/customValidator":427,"./directives/formio":428,"./directives/formioBindHtml.js":429,"./directives/formioComponent":430,"./directives/formioComponentTooltip":431,"./directives/formioComponentView":432,"./directives/formioDelete":433,"./directives/formioElement":434,"./directives/formioErrors":435,"./directives/formioMask":436,"./directives/formioMax":437,"./directives/formioMin":438,"./directives/formioScriptEditor":439,"./directives/formioSubmission":440,"./directives/formioSubmissions":441,"./directives/formioWizard":442,"./factories/FormioScope":443,"./factories/FormioUtils":444,"./factories/formioInterceptor":446,"./factories/formioTableView":447,"./filters/flattenComponents":448,"./filters/safehtml":449,"./filters/shortcut":450,"./filters/tableComponents":451,"./filters/tableFieldView":452,"./filters/tableView":453,"./filters/translate":454,"./filters/trusturl":455,"./polyfills/polyfills":459,"./providers/Formio":460}],458:[function(_dereq_,module,exports){
+},{"./components":409,"./directives/customValidator":426,"./directives/formio":427,"./directives/formioBindHtml.js":428,"./directives/formioComponent":429,"./directives/formioComponentTooltip":430,"./directives/formioComponentView":431,"./directives/formioDelete":432,"./directives/formioElement":433,"./directives/formioErrors":434,"./directives/formioMask":435,"./directives/formioMax":436,"./directives/formioMin":437,"./directives/formioScriptEditor":438,"./directives/formioSubmission":439,"./directives/formioSubmissions":440,"./directives/formioWizard":441,"./factories/FormioScope":442,"./factories/FormioUtils":443,"./factories/formioInterceptor":445,"./factories/formioTableView":446,"./filters/flattenComponents":447,"./filters/safehtml":448,"./filters/shortcut":449,"./filters/tableComponents":450,"./filters/tableFieldView":451,"./filters/tableView":452,"./filters/translate":453,"./filters/trusturl":454,"./polyfills/polyfills":458,"./providers/Formio":459}],457:[function(_dereq_,module,exports){
 "use strict";
 'use strict';
 
@@ -100927,13 +101034,13 @@ if (typeof Object.assign != 'function') {
   })();
 }
 
-},{}],459:[function(_dereq_,module,exports){
+},{}],458:[function(_dereq_,module,exports){
 "use strict";
 'use strict';
 
 _dereq_('./Object.assign');
 
-},{"./Object.assign":458}],460:[function(_dereq_,module,exports){
+},{"./Object.assign":457}],459:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function() {
   // The formio class.
@@ -101014,7 +101121,7 @@ module.exports = function() {
   };
 };
 
-},{"formiojs/Formio":123}],461:[function(_dereq_,module,exports){
+},{"formiojs/Formio":123}],460:[function(_dereq_,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -101200,7 +101307,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],462:[function(_dereq_,module,exports){
+},{}],461:[function(_dereq_,module,exports){
 module.exports = function (obj) {
     if (!obj || typeof obj !== 'object') return obj;
     
@@ -101237,7 +101344,7 @@ var isArray = Array.isArray || function (xs) {
     return {}.toString.call(xs) === '[object Array]';
 };
 
-},{}],463:[function(_dereq_,module,exports){
+},{}],462:[function(_dereq_,module,exports){
 /*!
  * Signature Pad v2.3.2
  * https://github.com/szimek/signature_pad
@@ -101849,9 +101956,9 @@ return SignaturePad;
 
 })));
 
-},{}],464:[function(_dereq_,module,exports){
+},{}],463:[function(_dereq_,module,exports){
 !function(e,t){"object"==typeof exports&&"object"==typeof module?module.exports=t():"function"==typeof define&&define.amd?define([],t):"object"==typeof exports?exports.textMaskAddons=t():e.textMaskAddons=t()}(this,function(){return function(e){function t(r){if(n[r])return n[r].exports;var i=n[r]={exports:{},id:r,loaded:!1};return e[r].call(i.exports,i,i.exports,t),i.loaded=!0,i.exports}var n={};return t.m=e,t.c=n,t.p="",t(0)}([function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{default:e}}Object.defineProperty(t,"__esModule",{value:!0});var i=n(1);Object.defineProperty(t,"createAutoCorrectedDatePipe",{enumerable:!0,get:function(){return r(i).default}});var o=n(2);Object.defineProperty(t,"createNumberMask",{enumerable:!0,get:function(){return r(o).default}});var u=n(3);Object.defineProperty(t,"emailMask",{enumerable:!0,get:function(){return r(u).default}})},function(e,t){"use strict";function n(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:"mm dd yyyy",t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{},n=t.minYear,o=void 0===n?1:n,u=t.maxYear,a=void 0===u?9999:u,c=e.split(/[^dmyHMS]+/).sort(function(e,t){return i.indexOf(e)-i.indexOf(t)});return function(t){var n=[],i={dd:31,mm:12,yy:99,yyyy:a,HH:23,MM:59,SS:59},u={dd:1,mm:1,yy:0,yyyy:o,HH:0,MM:0,SS:0},l=t.split("");c.forEach(function(t){var r=e.indexOf(t),o=parseInt(i[t].toString().substr(0,1),10);parseInt(l[r],10)>o&&(l[r+1]=l[r],l[r]=0,n.push(r))});var s=0,d=c.some(function(n){var c=e.indexOf(n),l=n.length,d=t.substr(c,l).replace(/\D/g,""),f=parseInt(d,10);"mm"===n&&(s=f||0);var p="dd"===n?r[s]:i[n];if("yyyy"===n&&(1!==o||9999!==a)){var v=parseInt(i[n].toString().substring(0,d.length),10),y=parseInt(u[n].toString().substring(0,d.length),10);return f<y||f>v}return f>p||d.length===l&&f<u[n]});return!d&&{value:l.join(""),indexesOfPipedChars:n}}}Object.defineProperty(t,"__esModule",{value:!0}),t.default=n;var r=[31,31,29,31,30,31,30,31,31,30,31,30,31],i=["yyyy","yy","mm","dd","HH","MM","SS"]},function(e,t){"use strict";function n(){function e(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:a,t=e.length;if(e===a||e[0]===g[0]&&1===t)return g.split(a).concat([v]).concat(h.split(a));if(e===P&&_)return g.split(a).concat(["0",P,v]).concat(h.split(a));var n=e[0]===s&&D;n&&(e=e.toString().substr(1));var u=e.lastIndexOf(P),c=u!==-1,l=void 0,m=void 0,b=void 0;if(e.slice($*-1)===h&&(e=e.slice(0,$*-1)),c&&(_||I)?(l=e.slice(e.slice(0,N)===g?N:0,u),m=e.slice(u+1,t),m=r(m.replace(f,a))):l=e.slice(0,N)===g?e.slice(N):e,L&&("undefined"==typeof L?"undefined":o(L))===p){var O="."===S?"[.]":""+S,M=(l.match(new RegExp(O,"g"))||[]).length;l=l.slice(0,L+M*V)}return l=l.replace(f,a),R||(l=l.replace(/^0+(0$|[^0])/,"$1")),l=x?i(l,S):l,b=r(l),(c&&_||I===!0)&&(e[u-1]!==P&&b.push(y),b.push(P,y),m&&(("undefined"==typeof C?"undefined":o(C))===p&&(m=m.slice(0,C)),b=b.concat(m)),I===!0&&e[u-1]===P&&b.push(v)),N>0&&(b=g.split(a).concat(b)),n&&(b.length===N&&b.push(v),b=[d].concat(b)),h.length>0&&(b=b.concat(h.split(a))),b}var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{},n=t.prefix,g=void 0===n?u:n,m=t.suffix,h=void 0===m?a:m,b=t.includeThousandsSeparator,x=void 0===b||b,O=t.thousandsSeparatorSymbol,S=void 0===O?c:O,M=t.allowDecimal,_=void 0!==M&&M,j=t.decimalSymbol,P=void 0===j?l:j,w=t.decimalLimit,C=void 0===w?2:w,H=t.requireDecimal,I=void 0!==H&&H,k=t.allowNegative,D=void 0!==k&&k,E=t.allowLeadingZeroes,R=void 0!==E&&E,A=t.integerLimit,L=void 0===A?null:A,N=g&&g.length||0,$=h&&h.length||0,V=S&&S.length||0;return e.instanceOf="createNumberMask",e}function r(e){return e.split(a).map(function(e){return v.test(e)?v:e})}function i(e,t){return e.replace(/\B(?=(\d{3})+(?!\d))/g,t)}Object.defineProperty(t,"__esModule",{value:!0});var o="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e};t.default=n;var u="$",a="",c=",",l=".",s="-",d=/-/,f=/\D+/g,p="number",v=/\d/,y="[]"},function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{default:e}}function i(e,t){e=e.replace(O,v);var n=t.placeholderChar,r=t.currentCaretPosition,i=e.indexOf(y),s=e.lastIndexOf(p),d=s<i?-1:s,f=o(e,i+1,y),g=o(e,d-1,p),m=u(e,i,n),h=a(e,i,d,n),b=c(e,d,n,r);m=l(m),h=l(h),b=l(b,!0);var x=m.concat(f).concat(h).concat(g).concat(b);return x}function o(e,t,n){var r=[];return e[t]===n?r.push(n):r.push(g,n),r.push(g),r}function u(e,t){return t===-1?e:e.slice(0,t)}function a(e,t,n,r){var i=v;return t!==-1&&(i=n===-1?e.slice(t+1,e.length):e.slice(t+1,n)),i=i.replace(new RegExp("[\\s"+r+"]",h),v),i===y?f:i.length<1?m:i[i.length-1]===p?i.slice(0,i.length-1):i}function c(e,t,n,r){var i=v;return t!==-1&&(i=e.slice(t+1,e.length)),i=i.replace(new RegExp("[\\s"+n+".]",h),v),0===i.length?e[t-1]===p&&r!==e.length?f:v:i}function l(e,t){return e.split(v).map(function(e){return e===m?e:t?x:b})}Object.defineProperty(t,"__esModule",{value:!0});var s=n(4),d=r(s),f="*",p=".",v="",y="@",g="[]",m=" ",h="g",b=/[^\s]/,x=/[^.\s]/,O=/\s/g;t.default={mask:i,pipe:d.default}},function(e,t){"use strict";function n(e,t){var n=t.currentCaretPosition,o=t.rawValue,f=t.previousConformedValue,p=t.placeholderChar,v=e;v=r(v);var y=v.indexOf(a),g=null===o.match(new RegExp("[^@\\s."+p+"]"));if(g)return u;if(v.indexOf(l)!==-1||y!==-1&&n!==y+1||o.indexOf(i)===-1&&f!==u&&o.indexOf(c)!==-1)return!1;var m=v.indexOf(i),h=v.slice(m+1,v.length);return(h.match(d)||s).length>1&&v.substr(-1)===c&&n!==o.length&&(v=v.slice(0,v.length-1)),v}function r(e){var t=0;return e.replace(o,function(){return t++,1===t?i:u})}Object.defineProperty(t,"__esModule",{value:!0}),t.default=n;var i="@",o=/@/g,u="",a="@.",c=".",l="..",s=[],d=/\./g}])});
-},{}],465:[function(_dereq_,module,exports){
+},{}],464:[function(_dereq_,module,exports){
 (function (setImmediate,clearImmediate){
 var nextTick = _dereq_('process/browser.js').nextTick;
 var apply = Function.prototype.apply;
@@ -101930,7 +102037,7 @@ exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate :
   delete immediateIds[id];
 };
 }).call(this,_dereq_("timers").setImmediate,_dereq_("timers").clearImmediate)
-},{"process/browser.js":461,"timers":465}],466:[function(_dereq_,module,exports){
+},{"process/browser.js":460,"timers":464}],465:[function(_dereq_,module,exports){
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
@@ -104358,9 +104465,9 @@ $templateCache.put("selectize/match.tpl.html","<div ng-hide=\"$select.searchEnab
 $templateCache.put("selectize/no-choice.tpl.html","<div class=\"ui-select-no-choice selectize-dropdown\" ng-show=\"$select.items.length == 0\"><div class=\"selectize-dropdown-content\"><div data-selectable=\"\" ng-transclude=\"\"></div></div></div>");
 $templateCache.put("selectize/select-multiple.tpl.html","<div class=\"ui-select-container selectize-control multi plugin-remove_button\" ng-class=\"{\'open\': $select.open}\"><div class=\"selectize-input\" ng-class=\"{\'focus\': $select.open, \'disabled\': $select.disabled, \'selectize-focus\' : $select.focus}\" ng-click=\"$select.open && !$select.searchEnabled ? $select.toggle($event) : $select.activate()\"><div class=\"ui-select-match\"></div><input type=\"search\" autocomplete=\"off\" tabindex=\"-1\" class=\"ui-select-search\" ng-class=\"{\'ui-select-search-hidden\':!$select.searchEnabled}\" placeholder=\"{{$selectMultiple.getPlaceholder()}}\" ng-model=\"$select.search\" ng-disabled=\"$select.disabled\" aria-expanded=\"{{$select.open}}\" aria-label=\"{{ $select.baseTitle }}\" ondrop=\"return false;\"></div><div class=\"ui-select-choices\"></div><div class=\"ui-select-no-choice\"></div></div>");
 $templateCache.put("selectize/select.tpl.html","<div class=\"ui-select-container selectize-control single\" ng-class=\"{\'open\': $select.open}\"><div class=\"selectize-input\" ng-class=\"{\'focus\': $select.open, \'disabled\': $select.disabled, \'selectize-focus\' : $select.focus}\" ng-click=\"$select.open && !$select.searchEnabled ? $select.toggle($event) : $select.activate()\"><div class=\"ui-select-match\"></div><input type=\"search\" autocomplete=\"off\" tabindex=\"-1\" class=\"ui-select-search ui-select-toggle\" ng-class=\"{\'ui-select-search-hidden\':!$select.searchEnabled}\" ng-click=\"$select.toggle($event)\" placeholder=\"{{$select.placeholder}}\" ng-model=\"$select.search\" ng-hide=\"!$select.isEmpty() && !$select.open\" ng-disabled=\"$select.disabled\" aria-label=\"{{ $select.baseTitle }}\"></div><div class=\"ui-select-choices\"></div><div class=\"ui-select-no-choice\"></div></div>");}]);
-},{}],467:[function(_dereq_,module,exports){
+},{}],466:[function(_dereq_,module,exports){
 !function(e,r){"object"==typeof exports&&"object"==typeof module?module.exports=r():"function"==typeof define&&define.amd?define([],r):"object"==typeof exports?exports.vanillaTextMask=r():e.vanillaTextMask=r()}(this,function(){return function(e){function r(n){if(t[n])return t[n].exports;var o=t[n]={exports:{},id:n,loaded:!1};return e[n].call(o.exports,o,o.exports,r),o.loaded=!0,o.exports}var t={};return r.m=e,r.c=t,r.p="",r(0)}([function(e,r,t){"use strict";function n(e){return e&&e.__esModule?e:{default:e}}function o(e){var r=e.inputElement,t=(0,u.default)(e),n=function(e){var r=e.target.value;return t.update(r)};return r.addEventListener("input",n),t.update(r.value),{textMaskInputElement:t,destroy:function(){r.removeEventListener("input",n)}}}Object.defineProperty(r,"__esModule",{value:!0}),r.conformToMask=void 0,r.maskInput=o;var i=t(2);Object.defineProperty(r,"conformToMask",{enumerable:!0,get:function(){return n(i).default}});var a=t(5),u=n(a);r.default=o},function(e,r){"use strict";Object.defineProperty(r,"__esModule",{value:!0}),r.placeholderChar="_",r.strFunction="function"},function(e,r,t){"use strict";function n(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:l,r=arguments.length>1&&void 0!==arguments[1]?arguments[1]:u,t=arguments.length>2&&void 0!==arguments[2]?arguments[2]:{};if(!(0,i.isArray)(r)){if(("undefined"==typeof r?"undefined":o(r))!==a.strFunction)throw new Error("Text-mask:conformToMask; The mask property must be an array.");r=r(e,t),r=(0,i.processCaretTraps)(r).maskWithoutCaretTraps}var n=t.guide,s=void 0===n||n,f=t.previousConformedValue,d=void 0===f?l:f,c=t.placeholderChar,p=void 0===c?a.placeholderChar:c,v=t.placeholder,h=void 0===v?(0,i.convertMaskToPlaceholder)(r,p):v,m=t.currentCaretPosition,y=t.keepCharPositions,g=s===!1&&void 0!==d,b=e.length,C=d.length,k=h.length,x=r.length,P=b-C,T=P>0,O=m+(T?-P:0),M=O+Math.abs(P);if(y===!0&&!T){for(var w=l,S=O;S<M;S++)h[S]===p&&(w+=p);e=e.slice(0,O)+w+e.slice(O,b)}for(var _=e.split(l).map(function(e,r){return{char:e,isNew:r>=O&&r<M}}),j=b-1;j>=0;j--){var V=_[j].char;if(V!==p){var A=j>=O&&C===x;V===h[A?j-P:j]&&_.splice(j,1)}}var E=l,N=!1;e:for(var F=0;F<k;F++){var I=h[F];if(I===p){if(_.length>0)for(;_.length>0;){var L=_.shift(),R=L.char,J=L.isNew;if(R===p&&g!==!0){E+=p;continue e}if(r[F].test(R)){if(y===!0&&J!==!1&&d!==l&&s!==!1&&T){for(var W=_.length,q=null,z=0;z<W;z++){var B=_[z];if(B.char!==p&&B.isNew===!1)break;if(B.char===p){q=z;break}}null!==q?(E+=R,_.splice(q,1)):F--}else E+=R;continue e}N=!0}g===!1&&(E+=h.substr(F,k));break}E+=I}if(g&&T===!1){for(var D=null,G=0;G<E.length;G++)h[G]===p&&(D=G);E=null!==D?E.substr(0,D+1):l}return{conformedValue:E,meta:{someCharsRejected:N}}}Object.defineProperty(r,"__esModule",{value:!0});var o="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e};r.default=n;var i=t(3),a=t(1),u=[],l=""},function(e,r,t){"use strict";function n(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:s,r=arguments.length>1&&void 0!==arguments[1]?arguments[1]:l.placeholderChar;if(!o(e))throw new Error("Text-mask:convertMaskToPlaceholder; The mask property must be an array.");if(e.indexOf(r)!==-1)throw new Error("Placeholder character must not be used as part of the mask. Please specify a character that is not present in your mask as your placeholder character.\n\n"+("The placeholder character that was received is: "+JSON.stringify(r)+"\n\n")+("The mask that was received is: "+JSON.stringify(e)));return e.map(function(e){return e instanceof RegExp?r:e}).join("")}function o(e){return Array.isArray&&Array.isArray(e)||e instanceof Array}function i(e){return"string"==typeof e||e instanceof String}function a(e){return"number"==typeof e&&void 0===e.length&&!isNaN(e)}function u(e){for(var r=[],t=void 0;t=e.indexOf(f),t!==-1;)r.push(t),e.splice(t,1);return{maskWithoutCaretTraps:e,indexes:r}}Object.defineProperty(r,"__esModule",{value:!0}),r.convertMaskToPlaceholder=n,r.isArray=o,r.isString=i,r.isNumber=a,r.processCaretTraps=u;var l=t(1),s=[],f="[]"},function(e,r){"use strict";function t(e){var r=e.previousConformedValue,t=void 0===r?o:r,i=e.previousPlaceholder,a=void 0===i?o:i,u=e.currentCaretPosition,l=void 0===u?0:u,s=e.conformedValue,f=e.rawValue,d=e.placeholderChar,c=e.placeholder,p=e.indexesOfPipedChars,v=void 0===p?n:p,h=e.caretTrapIndexes,m=void 0===h?n:h;if(0===l||!f.length)return 0;var y=f.length,g=t.length,b=c.length,C=s.length,k=y-g,x=k>0,P=0===g,T=k>1&&!x&&!P;if(T)return l;var O=x&&(t===s||s===c),M=0,w=void 0,S=void 0;if(O)M=l-k;else{var _=s.toLowerCase(),j=f.toLowerCase(),V=j.substr(0,l).split(o),A=V.filter(function(e){return _.indexOf(e)!==-1});S=A[A.length-1];var E=a.substr(0,A.length).split(o).filter(function(e){return e!==d}).length,N=c.substr(0,A.length).split(o).filter(function(e){return e!==d}).length,F=N!==E,I=void 0!==a[A.length-1]&&void 0!==c[A.length-2]&&a[A.length-1]!==d&&a[A.length-1]!==c[A.length-1]&&a[A.length-1]===c[A.length-2];!x&&(F||I)&&E>0&&c.indexOf(S)>-1&&void 0!==f[l]&&(w=!0,S=f[l]);for(var L=v.map(function(e){return _[e]}),R=L.filter(function(e){return e===S}).length,J=A.filter(function(e){return e===S}).length,W=c.substr(0,c.indexOf(d)).split(o).filter(function(e,r){return e===S&&f[r]!==e}).length,q=W+J+R+(w?1:0),z=0,B=0;B<C;B++){var D=_[B];if(M=B+1,D===S&&z++,z>=q)break}}if(x){for(var G=M,H=M;H<=b;H++)if(c[H]===d&&(G=H),c[H]===d||m.indexOf(H)!==-1||H===b)return G}else if(w){for(var K=M-1;K>=0;K--)if(s[K]===S||m.indexOf(K)!==-1||0===K)return K}else for(var Q=M;Q>=0;Q--)if(c[Q-1]===d||m.indexOf(Q)!==-1||0===Q)return Q}Object.defineProperty(r,"__esModule",{value:!0}),r.default=t;var n=[],o=""},function(e,r,t){"use strict";function n(e){return e&&e.__esModule?e:{default:e}}function o(e){var r={previousConformedValue:void 0,previousPlaceholder:void 0};return{state:r,update:function(t){var n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:e,o=n.inputElement,s=n.mask,d=n.guide,m=n.pipe,g=n.placeholderChar,b=void 0===g?v.placeholderChar:g,C=n.keepCharPositions,k=void 0!==C&&C,x=n.showMask,P=void 0!==x&&x;if("undefined"==typeof t&&(t=o.value),t!==r.previousConformedValue){("undefined"==typeof s?"undefined":l(s))===y&&void 0!==s.pipe&&void 0!==s.mask&&(m=s.pipe,s=s.mask);var T=void 0,O=void 0;if(s instanceof Array&&(T=(0,p.convertMaskToPlaceholder)(s,b)),s!==!1){var M=a(t),w=o.selectionEnd,S=r.previousConformedValue,_=r.previousPlaceholder,j=void 0;if(("undefined"==typeof s?"undefined":l(s))===v.strFunction){if(O=s(M,{currentCaretPosition:w,previousConformedValue:S,placeholderChar:b}),O===!1)return;var V=(0,p.processCaretTraps)(O),A=V.maskWithoutCaretTraps,E=V.indexes;O=A,j=E,T=(0,p.convertMaskToPlaceholder)(O,b)}else O=s;var N={previousConformedValue:S,guide:d,placeholderChar:b,pipe:m,placeholder:T,currentCaretPosition:w,keepCharPositions:k},F=(0,c.default)(M,O,N),I=F.conformedValue,L=("undefined"==typeof m?"undefined":l(m))===v.strFunction,R={};L&&(R=m(I,u({rawValue:M},N)),R===!1?R={value:S,rejected:!0}:(0,p.isString)(R)&&(R={value:R}));var J=L?R.value:I,W=(0,f.default)({previousConformedValue:S,previousPlaceholder:_,conformedValue:J,placeholder:T,rawValue:M,currentCaretPosition:w,placeholderChar:b,indexesOfPipedChars:R.indexesOfPipedChars,caretTrapIndexes:j}),q=J===T&&0===W,z=P?T:h,B=q?z:J;r.previousConformedValue=B,r.previousPlaceholder=T,o.value!==B&&(o.value=B,i(o,W))}}}}}function i(e,r){document.activeElement===e&&(g?b(function(){return e.setSelectionRange(r,r,m)},0):e.setSelectionRange(r,r,m))}function a(e){if((0,p.isString)(e))return e;if((0,p.isNumber)(e))return String(e);if(void 0===e||null===e)return h;throw new Error("The 'value' provided to Text Mask needs to be a string or a number. The value received was:\n\n "+JSON.stringify(e))}Object.defineProperty(r,"__esModule",{value:!0});var u=Object.assign||function(e){for(var r=1;r<arguments.length;r++){var t=arguments[r];for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n])}return e},l="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e};r.default=o;var s=t(4),f=n(s),d=t(2),c=n(d),p=t(3),v=t(1),h="",m="none",y="object",g="undefined"!=typeof navigator&&/Android/i.test(navigator.userAgent),b="undefined"!=typeof requestAnimationFrame?requestAnimationFrame:setTimeout}])});
-},{}],468:[function(_dereq_,module,exports){
+},{}],467:[function(_dereq_,module,exports){
 (function(self) {
   'use strict';
 
@@ -104828,7 +104935,7 @@ $templateCache.put("selectize/select.tpl.html","<div class=\"ui-select-container
   self.fetch.polyfill = true
 })(typeof self !== 'undefined' ? self : this);
 
-},{}],469:[function(_dereq_,module,exports){
+},{}],468:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function(app) {
   app.config([
@@ -104908,7 +105015,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],470:[function(_dereq_,module,exports){
+},{}],469:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function(app) {
   app.config([
@@ -105002,7 +105109,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],471:[function(_dereq_,module,exports){
+},{}],470:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function(app) {
   app.config([
@@ -105127,7 +105234,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],472:[function(_dereq_,module,exports){
+},{}],471:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function(app) {
   app.config([
@@ -105212,7 +105319,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],473:[function(_dereq_,module,exports){
+},{}],472:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function(app) {
   app.run([
@@ -105368,7 +105475,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],474:[function(_dereq_,module,exports){
+},{}],473:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function(app) {
   app.config([
@@ -105432,7 +105539,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],475:[function(_dereq_,module,exports){
+},{}],474:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function(app) {
   app.config([
@@ -105503,7 +105610,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],476:[function(_dereq_,module,exports){
+},{}],475:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function(app) {
   app.config([
@@ -105583,7 +105690,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],477:[function(_dereq_,module,exports){
+},{}],476:[function(_dereq_,module,exports){
 "use strict";
 var _assign = _dereq_('lodash/assign');
 
@@ -105649,7 +105756,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{"lodash/assign":317}],478:[function(_dereq_,module,exports){
+},{"lodash/assign":317}],477:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function(app) {
   app.config([
@@ -105748,7 +105855,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],479:[function(_dereq_,module,exports){
+},{}],478:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function(app) {
   app.config([
@@ -105931,7 +106038,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],480:[function(_dereq_,module,exports){
+},{}],479:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function(app) {
   app.config([
@@ -106016,7 +106123,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],481:[function(_dereq_,module,exports){
+},{}],480:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function(app) {
   app.config([
@@ -106125,7 +106232,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],482:[function(_dereq_,module,exports){
+},{}],481:[function(_dereq_,module,exports){
 "use strict";
 var _cloneDeep = _dereq_('lodash/cloneDeep');
 var _each = _dereq_('lodash/each');
@@ -106175,7 +106282,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{"lodash/cloneDeep":322,"lodash/each":326}],483:[function(_dereq_,module,exports){
+},{"lodash/cloneDeep":322,"lodash/each":326}],482:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function(app) {
   app.config([
@@ -106238,7 +106345,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],484:[function(_dereq_,module,exports){
+},{}],483:[function(_dereq_,module,exports){
 "use strict";
 var _map = _dereq_('lodash/map');
 module.exports = function(app) {
@@ -106334,7 +106441,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{"lodash/map":360}],485:[function(_dereq_,module,exports){
+},{"lodash/map":360}],484:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function(app) {
   app.config([
@@ -106460,7 +106567,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],486:[function(_dereq_,module,exports){
+},{}],485:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function(app) {
   app.config([
@@ -106521,7 +106628,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],487:[function(_dereq_,module,exports){
+},{}],486:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function(app) {
   app.config([
@@ -106583,7 +106690,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],488:[function(_dereq_,module,exports){
+},{}],487:[function(_dereq_,module,exports){
 "use strict";
 var app = angular.module('ngFormBuilder');
 
@@ -106628,7 +106735,7 @@ _dereq_('./panel')(app);
 _dereq_('./table')(app);
 _dereq_('./well')(app);
 
-},{"./address":469,"./button":470,"./checkbox":471,"./columns":472,"./components":473,"./container":474,"./content":475,"./currency":476,"./custom":477,"./datagrid":478,"./datetime":479,"./day":480,"./editgrid":481,"./email":482,"./fieldset":483,"./file":484,"./form":485,"./hidden":486,"./htmlelement":487,"./number":489,"./page":490,"./panel":491,"./password":492,"./phonenumber":493,"./radio":494,"./resource":495,"./select":496,"./selectboxes":497,"./signature":498,"./survey":499,"./table":500,"./textarea":501,"./textfield":502,"./time":503,"./well":504}],489:[function(_dereq_,module,exports){
+},{"./address":468,"./button":469,"./checkbox":470,"./columns":471,"./components":472,"./container":473,"./content":474,"./currency":475,"./custom":476,"./datagrid":477,"./datetime":478,"./day":479,"./editgrid":480,"./email":481,"./fieldset":482,"./file":483,"./form":484,"./hidden":485,"./htmlelement":486,"./number":488,"./page":489,"./panel":490,"./password":491,"./phonenumber":492,"./radio":493,"./resource":494,"./select":495,"./selectboxes":496,"./signature":497,"./survey":498,"./table":499,"./textarea":500,"./textfield":501,"./time":502,"./well":503}],488:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function(app) {
   app.config([
@@ -106764,7 +106871,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],490:[function(_dereq_,module,exports){
+},{}],489:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function(app) {
   app.config([
@@ -106785,7 +106892,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],491:[function(_dereq_,module,exports){
+},{}],490:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function(app) {
   app.config([
@@ -106900,7 +107007,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],492:[function(_dereq_,module,exports){
+},{}],491:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function(app) {
   app.config([
@@ -106976,7 +107083,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],493:[function(_dereq_,module,exports){
+},{}],492:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function(app) {
   app.config([
@@ -107059,7 +107166,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],494:[function(_dereq_,module,exports){
+},{}],493:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function(app) {
   app.config([
@@ -107138,7 +107245,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],495:[function(_dereq_,module,exports){
+},{}],494:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function(app) {
   app.config([
@@ -107242,7 +107349,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],496:[function(_dereq_,module,exports){
+},{}],495:[function(_dereq_,module,exports){
 "use strict";
 var _clone = _dereq_('lodash/clone');
 module.exports = function(app) {
@@ -107503,7 +107610,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{"lodash/clone":321}],497:[function(_dereq_,module,exports){
+},{"lodash/clone":321}],496:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function(app) {
   app.config([
@@ -107590,7 +107697,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],498:[function(_dereq_,module,exports){
+},{}],497:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function(app) {
   app.config([
@@ -107658,7 +107765,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],499:[function(_dereq_,module,exports){
+},{}],498:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function(app) {
   app.config([
@@ -107731,7 +107838,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],500:[function(_dereq_,module,exports){
+},{}],499:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function(app) {
   app.config([
@@ -107804,7 +107911,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],501:[function(_dereq_,module,exports){
+},{}],500:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function(app) {
   app.config([
@@ -107971,7 +108078,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],502:[function(_dereq_,module,exports){
+},{}],501:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function(app) {
   app.config([
@@ -108111,7 +108218,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],503:[function(_dereq_,module,exports){
+},{}],502:[function(_dereq_,module,exports){
 "use strict";
 var _cloneDeep = _dereq_('lodash/cloneDeep');
 var _each = _dereq_('lodash/each');
@@ -108164,7 +108271,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{"lodash/cloneDeep":322,"lodash/each":326}],504:[function(_dereq_,module,exports){
+},{"lodash/cloneDeep":322,"lodash/each":326}],503:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function(app) {
   app.config([
@@ -108212,7 +108319,7 @@ module.exports = function(app) {
   ]);
 };
 
-},{}],505:[function(_dereq_,module,exports){
+},{}],504:[function(_dereq_,module,exports){
 "use strict";
 /**
   * These are component options that can be reused
@@ -108581,7 +108688,7 @@ module.exports = {
   }
 };
 
-},{}],506:[function(_dereq_,module,exports){
+},{}],505:[function(_dereq_,module,exports){
 "use strict";
 module.exports = {
   actions: [
@@ -108664,7 +108771,7 @@ module.exports = {
   ]
 };
 
-},{}],507:[function(_dereq_,module,exports){
+},{}],506:[function(_dereq_,module,exports){
 "use strict";
 /*eslint max-statements: 0*/
 var _cloneDeep = _dereq_('lodash/cloneDeep');
@@ -109109,7 +109216,7 @@ module.exports = ['debounce', function(debounce) {
   };
 }];
 
-},{"lodash/capitalize":319,"lodash/cloneDeep":322,"lodash/each":326,"lodash/groupBy":332,"lodash/merge":363,"lodash/omitBy":365,"lodash/upperFirst":382}],508:[function(_dereq_,module,exports){
+},{"lodash/capitalize":319,"lodash/cloneDeep":322,"lodash/each":326,"lodash/groupBy":332,"lodash/merge":363,"lodash/omitBy":365,"lodash/upperFirst":381}],507:[function(_dereq_,module,exports){
 "use strict";
 /**
  * Create the form-builder-component directive.
@@ -109125,7 +109232,7 @@ module.exports = [
   }
 ];
 
-},{}],509:[function(_dereq_,module,exports){
+},{}],508:[function(_dereq_,module,exports){
 "use strict";
 'use strict';
 var utils = _dereq_('formiojs/utils').default;
@@ -109221,7 +109328,7 @@ module.exports = [
   }
 ];
 
-},{"formiojs/utils":131,"lodash/get":331,"lodash/reject":370}],510:[function(_dereq_,module,exports){
+},{"formiojs/utils":131,"lodash/get":331,"lodash/reject":370}],509:[function(_dereq_,module,exports){
 "use strict";
 var _isNumber = _dereq_('lodash/isNumber');
 var _camelCase = _dereq_('lodash/camelCase');
@@ -109568,7 +109675,7 @@ module.exports = [
   }
 ];
 
-},{"lodash/assign":317,"lodash/camelCase":318,"lodash/isNumber":349}],511:[function(_dereq_,module,exports){
+},{"lodash/assign":317,"lodash/camelCase":318,"lodash/isNumber":349}],510:[function(_dereq_,module,exports){
 "use strict";
 module.exports = [
   'formioElementDirective',
@@ -109593,7 +109700,7 @@ module.exports = [
   }
 ];
 
-},{}],512:[function(_dereq_,module,exports){
+},{}],511:[function(_dereq_,module,exports){
 "use strict";
 module.exports = [
   function() {
@@ -109619,7 +109726,7 @@ module.exports = [
   }
 ];
 
-},{}],513:[function(_dereq_,module,exports){
+},{}],512:[function(_dereq_,module,exports){
 "use strict";
 /**
 * This directive creates a field for tweaking component options.
@@ -109710,7 +109817,7 @@ module.exports = ['COMMON_OPTIONS', '$filter', function(COMMON_OPTIONS, $filter)
   };
 }];
 
-},{}],514:[function(_dereq_,module,exports){
+},{}],513:[function(_dereq_,module,exports){
 "use strict";
 /**
 * A directive for editing a component's custom validation.
@@ -109751,7 +109858,7 @@ module.exports = function() {
   };
 };
 
-},{}],515:[function(_dereq_,module,exports){
+},{}],514:[function(_dereq_,module,exports){
 "use strict";
 /**
 * A directive for a field to edit a component input format.
@@ -109795,7 +109902,7 @@ module.exports = function() {
   };
 };
 
-},{}],516:[function(_dereq_,module,exports){
+},{}],515:[function(_dereq_,module,exports){
 "use strict";
 /**
 * A directive for a field to edit a component inputs' label position.
@@ -109837,7 +109944,7 @@ module.exports = function() {
     };
   };
 
-},{}],517:[function(_dereq_,module,exports){
+},{}],516:[function(_dereq_,module,exports){
 "use strict";
 /**
 * A directive for a field to edit a component's key.
@@ -109883,7 +109990,7 @@ module.exports = function() {
   };
 };
 
-},{}],518:[function(_dereq_,module,exports){
+},{}],517:[function(_dereq_,module,exports){
 "use strict";
 /**
 * A directive for a field to edit a component's label position.
@@ -109947,7 +110054,7 @@ module.exports = function() {
     };
   };
 
-},{}],519:[function(_dereq_,module,exports){
+},{}],518:[function(_dereq_,module,exports){
 "use strict";
 /**
 * A directive for a field to edit a component options' label position.
@@ -109989,7 +110096,7 @@ module.exports = function() {
     };
   };
 
-},{}],520:[function(_dereq_,module,exports){
+},{}],519:[function(_dereq_,module,exports){
 "use strict";
 /**
 * A directive for a field to edit a component's shortcut.
@@ -110011,7 +110118,7 @@ module.exports = function() {
   };
 };
 
-},{}],521:[function(_dereq_,module,exports){
+},{}],520:[function(_dereq_,module,exports){
 "use strict";
 /**
 * A directive for a field to edit a component's tags.
@@ -110055,7 +110162,7 @@ module.exports = function() {
   };
 };
 
-},{"lodash/map":360}],522:[function(_dereq_,module,exports){
+},{"lodash/map":360}],521:[function(_dereq_,module,exports){
 "use strict";
 module.exports = [
   function() {
@@ -110077,7 +110184,7 @@ module.exports = [
   }
 ];
 
-},{}],523:[function(_dereq_,module,exports){
+},{}],522:[function(_dereq_,module,exports){
 "use strict";
 /**
  * A directive for a table builder
@@ -110131,7 +110238,7 @@ module.exports = function() {
   };
 };
 
-},{"lodash/merge":363}],524:[function(_dereq_,module,exports){
+},{"lodash/merge":363}],523:[function(_dereq_,module,exports){
 "use strict";
 /**
 * Invokes Bootstrap's popover jquery plugin on an element
@@ -110176,7 +110283,7 @@ module.exports = ['$filter', function($filter) {
   };
 }];
 
-},{}],525:[function(_dereq_,module,exports){
+},{}],524:[function(_dereq_,module,exports){
 "use strict";
 /**
 * A directive that provides a UI to add {value, label} objects to an array.
@@ -110239,7 +110346,7 @@ module.exports = function() {
   };
 };
 
-},{"lodash/camelCase":318,"lodash/map":360}],526:[function(_dereq_,module,exports){
+},{"lodash/camelCase":318,"lodash/map":360}],525:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function() {
   return {
@@ -110276,7 +110383,7 @@ module.exports = function() {
   };
 };
 
-},{}],527:[function(_dereq_,module,exports){
+},{}],526:[function(_dereq_,module,exports){
 "use strict";
 module.exports = function () {
   return {
@@ -110299,7 +110406,7 @@ module.exports = function () {
   };
 }
 
-},{}],528:[function(_dereq_,module,exports){
+},{}],527:[function(_dereq_,module,exports){
 "use strict";
 /**
  * A directive that provides a UI for multiple masks input.
@@ -110340,7 +110447,7 @@ module.exports = ['COMMON_OPTIONS', function (COMMON_OPTIONS) {
   };
 }];
 
-},{}],529:[function(_dereq_,module,exports){
+},{}],528:[function(_dereq_,module,exports){
 "use strict";
 /**
 * A directive that provides a UI to add key-value pair object.
@@ -110413,7 +110520,7 @@ module.exports = function() {
   };
 };
 
-},{}],530:[function(_dereq_,module,exports){
+},{}],529:[function(_dereq_,module,exports){
 "use strict";
 /**
 * A directive for an input mask for default value.
@@ -110463,7 +110570,7 @@ module.exports = function() {
   };
 };
 
-},{"formiojs/utils":131,"vanilla-text-mask":467}],531:[function(_dereq_,module,exports){
+},{"formiojs/utils":131,"vanilla-text-mask":466}],530:[function(_dereq_,module,exports){
 "use strict";
 /*
 * Prevents user inputting invalid api key characters.
@@ -110486,7 +110593,7 @@ module.exports = function() {
   };
 };
 
-},{}],532:[function(_dereq_,module,exports){
+},{}],531:[function(_dereq_,module,exports){
 "use strict";
 /**
 * A directive that provides a UI to add {value, label} objects to an array.
@@ -110568,7 +110675,7 @@ module.exports = function() {
   };
 };
 
-},{"lodash/camelCase":318,"lodash/map":360}],533:[function(_dereq_,module,exports){
+},{"lodash/camelCase":318,"lodash/map":360}],532:[function(_dereq_,module,exports){
 "use strict";
 /**
 * A directive that provides a UI to add {value, label} objects to an array.
@@ -110690,7 +110797,7 @@ module.exports = ['BuilderUtils', function(BuilderUtils) {
   }
 ];
 
-},{"lodash/camelCase":318,"lodash/difference":325,"lodash/map":360,"lodash/without":383}],534:[function(_dereq_,module,exports){
+},{"lodash/camelCase":318,"lodash/difference":325,"lodash/map":360,"lodash/without":382}],533:[function(_dereq_,module,exports){
 "use strict";
 'use strict';
 
@@ -110849,7 +110956,7 @@ module.exports = ['FormioUtils', function(FormioUtils) {
   };
 }];
 
-},{"lodash/difference":325,"lodash/range":369}],535:[function(_dereq_,module,exports){
+},{"lodash/difference":325,"lodash/range":369}],534:[function(_dereq_,module,exports){
 "use strict";
 // Create an AngularJS service called debounce
 module.exports = ['$timeout','$q', function($timeout, $q) {
@@ -110883,16 +110990,16 @@ module.exports = ['$timeout','$q', function($timeout, $q) {
   };
 }];
 
-},{}],536:[function(_dereq_,module,exports){
+},{}],535:[function(_dereq_,module,exports){
 "use strict";
 _dereq_('ng-formio/src/formio-complete.js');
 _dereq_('angular-drag-and-drop-lists');
 _dereq_('ng-dialog');
 _dereq_('./ngFormBuilder.js');
 
-},{"./ngFormBuilder.js":537,"angular-drag-and-drop-lists":2,"ng-dialog":388,"ng-formio/src/formio-complete.js":456}],537:[function(_dereq_,module,exports){
+},{"./ngFormBuilder.js":536,"angular-drag-and-drop-lists":2,"ng-dialog":387,"ng-formio/src/formio-complete.js":455}],536:[function(_dereq_,module,exports){
 "use strict";
-/*! ng-formio-builder v2.36.13 | https://unpkg.com/ng-formio-builder@2.36.13/LICENSE.txt */
+/*! ng-formio-builder v2.36.14 | https://unpkg.com/ng-formio-builder@2.36.14/LICENSE.txt */
 /*global window: false, console: false, jQuery: false */
 /*jshint browser: true */
 
@@ -111101,5 +111208,5 @@ app.run([
 
 _dereq_('./components');
 
-},{"./components":488,"./constants/commonOptions":505,"./constants/formOptions":506,"./directives/formBuilder":507,"./directives/formBuilderComponent":508,"./directives/formBuilderConditional":509,"./directives/formBuilderDnd":510,"./directives/formBuilderElement":511,"./directives/formBuilderList":512,"./directives/formBuilderOption":513,"./directives/formBuilderOptionCustomValidation":514,"./directives/formBuilderOptionInputFormat":515,"./directives/formBuilderOptionInputsLabelPosition":516,"./directives/formBuilderOptionKey":517,"./directives/formBuilderOptionLabelPosition":518,"./directives/formBuilderOptionOptionsLabelPosition":519,"./directives/formBuilderOptionShortcut":520,"./directives/formBuilderOptionTags":521,"./directives/formBuilderRow":522,"./directives/formBuilderTable":523,"./directives/formBuilderTooltip":524,"./directives/headersBuilder":525,"./directives/jsonInput":526,"./directives/labelValidator":527,"./directives/multiMaskInput":528,"./directives/objectBuilder":529,"./directives/textMask":530,"./directives/validApiKey":531,"./directives/valueBuilder":532,"./directives/valueBuilderWithShortcuts":533,"./factories/BuilderUtils":534,"./factories/debounce":535,"formiojs/utils":131}]},{},[536])(536)
+},{"./components":487,"./constants/commonOptions":504,"./constants/formOptions":505,"./directives/formBuilder":506,"./directives/formBuilderComponent":507,"./directives/formBuilderConditional":508,"./directives/formBuilderDnd":509,"./directives/formBuilderElement":510,"./directives/formBuilderList":511,"./directives/formBuilderOption":512,"./directives/formBuilderOptionCustomValidation":513,"./directives/formBuilderOptionInputFormat":514,"./directives/formBuilderOptionInputsLabelPosition":515,"./directives/formBuilderOptionKey":516,"./directives/formBuilderOptionLabelPosition":517,"./directives/formBuilderOptionOptionsLabelPosition":518,"./directives/formBuilderOptionShortcut":519,"./directives/formBuilderOptionTags":520,"./directives/formBuilderRow":521,"./directives/formBuilderTable":522,"./directives/formBuilderTooltip":523,"./directives/headersBuilder":524,"./directives/jsonInput":525,"./directives/labelValidator":526,"./directives/multiMaskInput":527,"./directives/objectBuilder":528,"./directives/textMask":529,"./directives/validApiKey":530,"./directives/valueBuilder":531,"./directives/valueBuilderWithShortcuts":532,"./factories/BuilderUtils":533,"./factories/debounce":534,"formiojs/utils":131}]},{},[535])(535)
 });
